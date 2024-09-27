@@ -1,19 +1,15 @@
-import { set, connect as _connect } from 'mongoose';
+import mongoose from 'mongoose';
 import uri from '../COMMON.js'
-set('strictQuery', true);
 
-const atlas = uri;
+mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connect Successfully");
+  })
+  .catch((err) => {
+    console.error("Failed to connect " + err);
+  });
 
-const connect = async () => {
-    try {
-        await _connect(atlas);
-        console.log("Connect Success");
-    } catch (error) {
-        console.error("Connection Error:", error);
-        console.log("Connect Fail");
-    }
-}
-
-
-
-export default { connect };
+module.exports = mongoose;
