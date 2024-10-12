@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
+var sanBongRouter = require('./routes/sanBong_routes')
 
 var app = express();
 

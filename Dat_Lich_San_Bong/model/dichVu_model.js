@@ -1,12 +1,21 @@
-import mongoose from 'mongoose';
+const db = require('../config/db')
 
-const DichVu_modelSchema = mongoose.Schema(
+const DichVuSchema = new db.Schema(
   {
-    content: {},
+    tenDichVu : {
+      type : String,
+      required : true
+    },
+    anhDichVu : {
+      type : String,
+      required : true
+    }
   },
   {
-    timestamps: true,
+    collection : 'dichVus'
   }
 );
 
-export default mongoose.model('DichVu_model', DichVu_modelSchema);
+const DichVuModel = db.model("DichVuModel",DichVuSchema);
+module.exports = {DichVuModel}
+
