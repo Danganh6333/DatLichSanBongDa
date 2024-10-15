@@ -1,13 +1,14 @@
-const SanBongModel = require("../model/sanBong_model");
+const { SanBongModel}  = require("../model/sanBong_model");
 const mongoose = require("mongoose");
+const COMMON = require('../COMMON')
 
 exports.getListField = async (req, res, next) => {
     try {
         await mongoose.connect(COMMON.uri);
-        const newSanBong = await SanBongModel.find();
-        console.log(newSanBong);
+        const SanBongs = await SanBongModel.find().sort({ createdAt: -1 });
+        console.log(SanBongs);
 
-        res.status(200).json(newSanBong);
+        res.status(200).json(SanBongs);
 
       } catch (error) {
         console.error(error);
@@ -45,7 +46,7 @@ exports.updateField = async (req, res, next) => {
 
         const updatedSanBong= await SanBongModel.findByIdAndUpdate(
             id_SanBong ,
-            {tenSan,diaDiem,giaTheoGio,trangThai},
+            {tenSan,giaTheoGio,trangThai},
             { new: true }
         );
     
@@ -55,5 +56,13 @@ exports.updateField = async (req, res, next) => {
         res.status(500).json({ error: "Lỗi khi cập nhật sân bóng" });
     }
 };
+
+exports.deleteField = async (req, res, next) => { 
+    try {
+        
+    } catch (error) {
+        
+    }
+}
 
 

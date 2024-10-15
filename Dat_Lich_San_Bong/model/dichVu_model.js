@@ -9,6 +9,10 @@ const DichVuSchema = new db.Schema(
     anhDichVu : {
       type : String,
       required : true
+    },
+    giaDichVu : {
+      type : Number,
+      required : true
     }
   },
   {

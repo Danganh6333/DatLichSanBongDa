@@ -14,6 +14,8 @@ const ThanhToanSchema = new db.Schema({
         type : Number,
         required: true
     }
+},{
+    collection:'thanhToans'
 })
 
 const ThanhToanModel = db.model("ThanhToanModel",ThanhToanSchema)
