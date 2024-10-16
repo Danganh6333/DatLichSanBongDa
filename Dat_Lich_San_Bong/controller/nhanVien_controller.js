@@ -22,30 +22,60 @@ exports.addStaff = async (req, res, next) => {
   try {
     await mongoose.connect(COMMON.uri);
     const { id_NguoiDung, id_CaLamViec, NgayVaoLam, NgayThoiLam } = req.body;
-    
-    const newNhanVien = new NhanVienModel({
-        id_NguoiDung,
-        id_CaLamViec,
-        NgayVaoLam,
-        NgayThoiLam
-    })
 
-    const savedNhanVien = await newNhanVien.save()
+    const newNhanVien = new NhanVienModel({
+      id_NguoiDung,
+      id_CaLamViec,
+      NgayVaoLam,
+      NgayThoiLam,
+    });
+
+    const savedNhanVien = await newNhanVien.save();
     res.status(201).json(savedNhanVien);
-} catch (error) {
+  } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi thêm nhân viên" });
   }
 };
 
-exports.updateStaff = async (req, res, next) => { 
-    try {
-        await mongoose.connect(COMMON.uri);
-    } catch (error) {
-        
-    }
-}
+exports.updateStaff = async (req, res, next) => {
+  try {
+    await mongoose.connect(COMMON.uri);
+    const id_NhanVien = req.params.id;
 
-exports.deleteStaff = async (req, res, next) => { 
+    if (!mongoose.Types.ObjectId.isValid(id_NhanVien)) {
+      return res.status(400).json({ message: "ID không hợp lệ!" });
+    }
+
+    const { id_CaLamViec } = req.body;
+    const updatedNhanVien = await NhanVienModel.findByIdAndUpdate(
+      id_NhanVien,
+      {
+        id_CaLamViec,
+      },
+      { new: true }
+    );
     
-}
+    res.status(200).json(updatedNhanVien);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Lỗi khi cập nhật nhân viên" });
+  }
+};
+
+exports.deleteStaff = async (req, res, next) => {
+  try {
+    await mongoose.connect(COMMON.uri);
+    const id_NhanVien = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id_NhanVien)) {
+      return res.status(400).json({ message: "ID không hợp lệ!" });
+    }
+
+    const deletedNhanVien = await NhanVienModel.findByIdAndDelete(id_NhanVien);
+    res.status(200).json(deletedNhanVien);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Lỗi khi lấy xóa nhân viên" });
+  }
+};

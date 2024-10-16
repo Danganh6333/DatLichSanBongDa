@@ -59,9 +59,14 @@ exports.updateField = async (req, res, next) => {
 
 exports.deleteField = async (req, res, next) => { 
     try {
-        
+        await mongoose.connect(COMMON.uri);
+        const id_SanBong = req.params.id;
+
+        const deletedSanBong = await SanBongModel.findByIdAndDelete(id_SanBong);
+        res.status(200).json(deletedSanBong);
     } catch (error) {
-        
+        console.error(error);
+        res.status(500).json({ error: "Lỗi khi xóa sân bóng" });
     }
 }
 

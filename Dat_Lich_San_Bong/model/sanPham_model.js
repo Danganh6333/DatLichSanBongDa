@@ -12,7 +12,6 @@ const SanPhamSchema = new db.Schema({
     },
     moTaSanPham : {
         type : String,
-        required : true
     },
     anhSanPham : {
         type : String,

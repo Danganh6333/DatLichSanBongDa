@@ -1,7 +1,6 @@
 const { DichVuModel } = require("../model/dichVu_model");
 const mongoose = require("mongoose");
 const COMMON = require("../COMMON");
-const e = require("express");
 
 exports.getListService = async (req, res, next) => {
   try {
@@ -40,8 +39,15 @@ exports.addService = async (req, res, next) => {
 exports.updateService = async (req, res, next) => {
   try {
     await mongoose.connect(COMMON.uri);
+
     const { tenDichVu, giaDichVu } = req.body;
+
     const id_DichVu = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id_DichVu)) {
+      return res.status(400).json({ message: "ID không hợp lệ!" });
+    }
+
     let anhDichVu = null;
     if (req.file) {
       anhDichVu = `${req.protocol}://localhost:3000/uploads/${req.file.filename}`;
@@ -60,8 +66,17 @@ exports.updateService = async (req, res, next) => {
 
 exports.deleteService = async (req, res, next) => {
   try {
+    await mongoose.connect(COMMON.uri);
+    const id_DichVu = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id_DichVu)) {
+      return res.status(400).json({ message: "ID không hợp lệ!" });
+    }
     
+    const deletedDichVu = await DichVuModel.findByIdAndDelete(id_DichVu);
+    res.status(200).json(deletedDichVu);
   } catch (error) {
-    
+    console.error(error);
+    res.status(500).json({ error: "Lỗi khi xóa dịch vụ" });
   }
-}
+};
