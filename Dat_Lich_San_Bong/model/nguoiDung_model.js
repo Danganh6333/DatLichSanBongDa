@@ -1,7 +1,7 @@
 const db = require("../config/db")
 
 const NguoiDungSchema = new db.Schema({
-    name: {
+    hoTen: {
         type:String,
         required : true
     },
@@ -13,15 +13,20 @@ const NguoiDungSchema = new db.Schema({
         type : String,
         required : true
     },  
-    role : {
+    vaiTro : {
         type: String,
         enum: ["user", "staff", "admin"],
         default : "user"
     },
-    password:{
+    matKhau:{
         type:String,
         required : true
     },
+    trangThai:{
+        type: String,
+        enum: ["Hoạt động", "Không hoạt động"],
+        default : "Hoạt động"
+    }
 },{
     collection: 'nguoiDungs'
 });

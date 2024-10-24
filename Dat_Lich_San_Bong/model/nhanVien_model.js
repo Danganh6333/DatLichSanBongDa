@@ -12,7 +12,7 @@ const NhanVienSchema = new db.Schema({
         required: true
     },
     NgayVaoLam : {
-        type : Date.now("dd/mm/yyyy"),
+        type : Date,
         required : true
     },
     NgayThoiLam : {

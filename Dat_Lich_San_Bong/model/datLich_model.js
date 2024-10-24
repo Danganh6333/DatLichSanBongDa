@@ -13,7 +13,7 @@ const DatLichSchema = new db.Schema({
     },
     ngayDatLich : {
         type : Date,
-        default : Date.now('dd/mm/yyyy'),
+        default : Date,
         required : true
     },
     ngayBatDau : {

@@ -2,7 +2,7 @@ const { DatLichModel } = require("../model/datLich_model");
 const mongoose = require("mongoose");
 const COMMON = require("../COMMON");
 
-exports.getListBooking = async (req, res, next) => {
+exports.getListBookings = async (req, res, next) => {
   try {
     await mongoose.connect(COMMON.uri);
     const DatLichs = await DatLichModel.find()

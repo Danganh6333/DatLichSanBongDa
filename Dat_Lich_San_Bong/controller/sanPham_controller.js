@@ -2,7 +2,7 @@ const { SanPhamModel } = require("../model/sanPham_model");
 const mongoose = require("mongoose");
 const COMMON = require("../COMMON");
 
-exports.getListProduct = async (req, res, next) => {
+exports.getListProducts = async (req, res, next) => {
   try {
     await mongoose.connect(COMMON.uri);
     const SanPhams = await SanPhamModel.find()
@@ -85,8 +85,10 @@ exports.deleteProduct = async (req, res, next) => {
       return res.status(400).json({ message: "ID không hợp lệ!" });
     }
 
-    
+    const deletedSanPham = await SanPhamModel.findByIdAndDelete(id_SanPham);
+    res.status(200).json(deletedSanPham);
   } catch (error) {
-
+    console.error(error);
+    res.status(500).json({ error: "Lỗi khi lấy xóa sản phẩm" });
   }
 };

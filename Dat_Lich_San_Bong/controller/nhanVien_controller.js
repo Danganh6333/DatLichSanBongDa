@@ -2,7 +2,7 @@ const { NhanVienModel } = require("../model/nhanVien_model");
 const mongoose = require("mongoose");
 const COMMON = require("../COMMON");
 
-exports.getListStaff = async (req, res, next) => {
+exports.getListStaffs = async (req, res, next) => {
   try {
     await mongoose.connect(COMMON.uri);
     const NhanViens = await NhanVienModel.find()

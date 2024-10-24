@@ -6,11 +6,11 @@ const CaLamViecSchema = new db.Schema({
     ref: "NhanVienModel",
   },
   gioBatDau: {
-    type: Date("hh:mm:ss dd/mm/yyyy"),
+    type: Date,
     required: "true",
   },
   gioKetThuc: {
-    type: Date("hh:mm:ss dd/mm/yyyy"),
+    type: Date,
     required: "true",
   },
   tongTien: {

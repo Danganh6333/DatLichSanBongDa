@@ -3,7 +3,7 @@ const db = require("../config/db")
 const ThanhToanSchema = new db.Schema({
     id_DatLich : {
         type: db.Schema.Types.ObjectId,
-        ref: "DichVuModel",
+        ref: "DatLichModel",
         required :true
     },
     tongTien : {

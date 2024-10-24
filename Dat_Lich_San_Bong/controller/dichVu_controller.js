@@ -2,7 +2,7 @@ const { DichVuModel } = require("../model/dichVu_model");
 const mongoose = require("mongoose");
 const COMMON = require("../COMMON");
 
-exports.getListService = async (req, res, next) => {
+exports.getListServices = async (req, res, next) => {
   try {
     await mongoose.connect(COMMON.uri);
     const DichVus = await DichVuModel.find().sort({ createdAt: -1 });
@@ -72,7 +72,7 @@ exports.deleteService = async (req, res, next) => {
     if (!mongoose.Types.ObjectId.isValid(id_DichVu)) {
       return res.status(400).json({ message: "ID không hợp lệ!" });
     }
-    
+
     const deletedDichVu = await DichVuModel.findByIdAndDelete(id_DichVu);
     res.status(200).json(deletedDichVu);
   } catch (error) {

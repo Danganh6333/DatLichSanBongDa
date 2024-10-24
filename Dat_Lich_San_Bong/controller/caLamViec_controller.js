@@ -2,7 +2,7 @@ const { CaLamViecModel } = require("../model/caLamViec_model");
 const mongoose = require("mongoose");
 const COMMON = require("../COMMON");
 
-exports.getListShift = async (req, res, next) => {
+exports.getListShifts = async (req, res, next) => {
   try {
     await mongoose.connect(COMMON.uri);
     const CaLamViecs = await CaLamViecModel.find()
@@ -54,7 +54,8 @@ exports.updateShift = async (req, res, next) => {
       {
         id_NhanVien,
         tongTien,
-      }
+      },
+      { new: true }
     );
     res.status(200).json(updatedCaLamViec);
   } catch (error) {
@@ -67,13 +68,15 @@ exports.deleteShift = async (req, res, next) => {
   try {
     await mongoose.connect(COMMON.uri);
     const id_CaLamViec = req.params.id;
-    
+
     if (!mongoose.Types.ObjectId.isValid(id_CalamViec)) {
       return res.status(400).json({ message: "ID không hợp lệ!" });
     }
 
-    const deletedCaLamViec = await CaLamViecModel.findByIdAndDelete(id_CaLamViec);
-    
+    const deletedCaLamViec = await CaLamViecModel.findByIdAndDelete(
+      id_CaLamViec
+    );
+
     res.status(200).json(deletedCaLamViec);
   } catch (error) {
     console.error(error);
