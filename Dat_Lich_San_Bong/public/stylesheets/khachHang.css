@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* General Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 10px;
+    background-color: aliceblue;
+}
+
+/* Profiles */
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 10px;
+}
+
+.profile-pic {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.profile-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+}
+
+.logo {
+    width: 90px;
+    height: auto;
+    margin-right: auto;
+}
+
+.nav__links {
+    list-style: none;
+    margin-left: 0;
+    margin-right: 20px;
+}
+
+.nav__links li {
+    display: inline-block;
+    padding: 0 10px;
+}
+
+.nav__links li a {
+    font-weight: 500;
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav__links li a:hover {
+    color: #0088a9;
+}
+
+/* Footer Styling */
+.footer-basic {
+    padding: 40px 20px;
+    background-color: #2c3e50;
+    color: #edf0f1;
+    text-align: center;
+    width: 100%;
+}
+
+.footer-basic .footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.footer-basic .social {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding-bottom: 19px;
+}
+
+.footer-basic .social a {
+    font-size: 24px;
+    color: #edf0f1;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 50%;
+    text-align: center;
+    display: inline-block;
+    border: 1px solid gray;
+    opacity: 0.85;
+}
+
+.footer-basic .social a:hover {
+    color: #0088a9;
+    background-color: #edf0f1;
+}
+
+.footer-basic ul {
+    padding: 0;
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.footer-basic ul a {
+    color: #edf0f1;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+.footer-basic ul a:hover {
+    opacity: 1;
+}
+
+.footer-basic .copyright {
+    font-size: 13px;
+    color: #aaa;
+    text-align: center;
+    margin-top: 15px;
+}
+

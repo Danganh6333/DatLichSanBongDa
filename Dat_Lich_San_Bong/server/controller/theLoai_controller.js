@@ -1,6 +1,6 @@
 const { TheLoaiModel } = require("../model/theLoai_model");
 const mongoose = require("mongoose");
-const COMMON = require("../COMMON");
+const COMMON = require("../../COMMON");
 
 exports.getListCategories = async (req, res, next) => {
   try {

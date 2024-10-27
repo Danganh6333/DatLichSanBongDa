@@ -1,0 +1,32 @@
+<div class="container">
+        <input type="checkbox" id="check">
+        <div class="login form">
+            <header>Đăng nhập</header>
+            <form action="/auth/signin" method="POST">
+                <input type="text" name="email" placeholder="Nhập Email Của Bạn">
+                <input type="password" name="matKhau" placeholder="Nhập Mật Khẩu Của Bạn">
+                <a href="#">Quên Mật Khẩu?</a>
+                <input type="submit" class="button" value="Đăng Nhập">
+            </form>
+            <div class="signup">
+                <span class="signup">Không có tài khoản?
+                    <label for="check">Đăng Ký</label>
+                </span>
+            </div>
+        </div>
+        <div class="registration form">
+            <header>Đăng ký</header>
+            <form action="/auth/signup" method="post">
+                <input type="text" name="hoTen" placeholder="Nhập Họ Tên Của Bạn" required>
+                <input type="email" name="email" placeholder="Nhập Email Của Bạn" required>
+                <input type="text" name="phoneNumber" placeholder="Nhập Số Điện Thoại" required>
+                <input type="password" name="matKhau" placeholder="Tạo Mật Khẩu Mới" required>
+                <input type="submit" class="button" value="Đăng Ký">
+            </form>
+            <div class="signup">
+                <span class="signup">Đã có tài khoản?
+                    <label for="check">Đăng Nhập</label>
+                </span>
+            </div>
+        </div>
+    </div>
