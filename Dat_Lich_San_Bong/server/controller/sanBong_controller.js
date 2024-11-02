@@ -1,10 +1,9 @@
 const { SanBongModel } = require("../model/sanBong_model");
 const mongoose = require("mongoose");
-const COMMON = require("../COMMON");
 
 exports.getListFields = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const SanBongs = await SanBongModel.find().sort({ createdAt: -1 });
     console.log(SanBongs);
 
@@ -17,7 +16,7 @@ exports.getListFields = async (req, res, next) => {
 
 exports.addField = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const { tenSan, diaDiem, giaTheoGio, trangThai } = req.body;
 
     const newSanBong = new SanBongModel({
@@ -38,7 +37,7 @@ exports.addField = async (req, res, next) => {
 
 exports.updateField = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
 
     const id_SanBong = req.params.id;
 
@@ -63,7 +62,7 @@ exports.updateField = async (req, res, next) => {
 
 exports.deleteField = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const id_SanBong = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id_SanBong)) {

@@ -1,10 +1,9 @@
 const { DichVuModel } = require("../model/dichVu_model");
 const mongoose = require("mongoose");
-const COMMON = require("../COMMON");
 
 exports.getListServices = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const DichVus = await DichVuModel.find().sort({ createdAt: -1 });
     console.log(DichVus);
 
@@ -17,7 +16,7 @@ exports.getListServices = async (req, res, next) => {
 
 exports.addService = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const { tenDichVu, giaDichVu } = req.body;
     let anhDichVu = null;
     if (req.file) {
@@ -38,7 +37,7 @@ exports.addService = async (req, res, next) => {
 
 exports.updateService = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
 
     const { tenDichVu, giaDichVu } = req.body;
 
@@ -66,7 +65,7 @@ exports.updateService = async (req, res, next) => {
 
 exports.deleteService = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const id_DichVu = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id_DichVu)) {

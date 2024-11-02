@@ -62,7 +62,7 @@ body{
  }
 .form a{
   font-size: 16px;
-  color: #009579;
+  color: darkslateblue;
   text-decoration: none;
 }
 .form a:hover{
@@ -70,7 +70,7 @@ body{
 }
 .form input.button{
   color: #fff;
-  background: #009579;
+  background: darkblue;
   font-size: 1.2rem;
   font-weight: 500;
   letter-spacing: 1px;
@@ -79,7 +79,7 @@ body{
   transition: 0.4s;
 }
 .form input.button:hover{
-  background: #006653;
+  background: lightskyblue;
 }
 .signup{
   font-size: 17px;

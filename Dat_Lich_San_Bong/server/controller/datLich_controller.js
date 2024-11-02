@@ -1,10 +1,9 @@
 const { DatLichModel } = require("../model/datLich_model");
 const mongoose = require("mongoose");
-const COMMON = require("../COMMON");
 
 exports.getListBookings = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const DatLichs = await DatLichModel.find()
       .populate("id_NguoiDung")
       .populate("id_SanBong")
@@ -20,7 +19,7 @@ exports.getListBookings = async (req, res, next) => {
 
 exports.addBooking = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const {
       id_NguoiDung,
       id_SanBong,
@@ -52,7 +51,7 @@ exports.addBooking = async (req, res, next) => {
 
 exports.updateBookingStatus = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
 
     const id_DatLich = req.params.id;
 

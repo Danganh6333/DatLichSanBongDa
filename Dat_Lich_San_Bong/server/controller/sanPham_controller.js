@@ -1,10 +1,9 @@
 const { SanPhamModel } = require("../model/sanPham_model");
 const mongoose = require("mongoose");
-const COMMON = require("../COMMON");
 
 exports.getListProducts = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const SanPhams = await SanPhamModel.find()
       .populate("id_TheLoai")
       .sort({ createdAt: -1 });
@@ -19,7 +18,7 @@ exports.getListProducts = async (req, res, next) => {
 
 exports.addProduct = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const { id_TheLoai, tenSanPham, moTaSanPham, gia, hangTonKho } = req.body;
     let anhSanPham = null;
     if (req.file) {
@@ -44,7 +43,7 @@ exports.addProduct = async (req, res, next) => {
 
 exports.updateProduct = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const id_SanPham = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id_SanPham)) {
@@ -78,7 +77,7 @@ exports.updateProduct = async (req, res, next) => {
 
 exports.deleteProduct = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const id_SanPham = req.params.id;
     
     if (!mongoose.Types.ObjectId.isValid(id_SanPham)) {

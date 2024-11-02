@@ -1,0 +1,7 @@
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('close');
+    const icon = document.querySelector('#toggle-btn i');
+    icon.classList.toggle('fa-angle-double-left');
+    icon.classList.toggle('fa-angle-double-right');
+}

@@ -1,10 +1,9 @@
 const { CaLamViecModel } = require("../model/caLamViec_model");
 const mongoose = require("mongoose");
-const COMMON = require("../COMMON");
 
 exports.getListShifts = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const CaLamViecs = await CaLamViecModel.find()
       .populate("id_NhanVien")
       .sort({ createdAt: -1 });
@@ -19,7 +18,7 @@ exports.getListShifts = async (req, res, next) => {
 
 exports.addShift = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const { id_NhanVien, gioBatDau, gioKetThuc, tongTien } = req.body;
 
     const newCaLamViec = new CaLamViecModel({
@@ -40,7 +39,7 @@ exports.addShift = async (req, res, next) => {
 
 exports.updateShift = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const id_CalamViec = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id_CalamViec)) {
@@ -66,7 +65,7 @@ exports.updateShift = async (req, res, next) => {
 
 exports.deleteShift = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const id_CaLamViec = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id_CalamViec)) {

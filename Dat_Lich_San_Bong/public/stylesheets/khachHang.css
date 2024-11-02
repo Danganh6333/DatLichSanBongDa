@@ -13,11 +13,12 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: 20px 10px;
-    background-color: aliceblue;
+    background-color: #f1f1f1;
 }
 
 /* Profiles */
 .profile {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -66,6 +67,254 @@ header {
 
 .nav__links li a:hover {
     color: #0088a9;
+}
+
+.nav__links li a.active {
+    color: #0088a9;
+}
+
+/*Intro Styling*/
+.intro {
+    position: relative;
+    background-image: url('/images/stadium.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 80vh;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.intro-content h2 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.intro-content p {
+    font-size: 1.5rem;
+    margin-top: 5px;
+}
+
+/*Photo Gallery Styling*/
+.photo-gallery {
+    padding: 50px 20px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.photo-gallery h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.photo-gallery p {
+    font-size: 1.1rem;
+    color: #555;
+    max-width: 600px;
+    margin: 10px auto 40px;
+    line-height: 1.6;
+    opacity: 0.9;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.photo-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
+    padding: 0 20px;
+}
+
+.loader {
+    border: 6px solid #f3f3f3;
+    border-top: 11px solid darkblue;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.photo-gallery img {
+    width: 100%;
+    border-radius: 10px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    position: relative;
+}
+
+.photo-gallery img:hover {
+    transform: scale(1.05);
+}
+
+/*Services Styling*/
+.services {
+    padding: 20px 20px;
+    background: #f1f1f1;
+}
+
+.services h1 {
+    text-transform: uppercase;
+    text-align: center;
+    padding-top: 1%;
+    margin-bottom: 60px;
+}
+
+.services h1::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -7%;
+    width: 146px;
+    height: 5px;
+    background-color: darkblue;
+}
+
+.services .row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 30px;
+}
+
+.services .row .service {
+    display: grid;
+    padding: 25px 10px;
+    text-align: center;
+    border-radius: 5px;
+    transition: transform .5s;
+    cursor: pointer;
+    color: darkblue;
+    font-size: 14px;
+}
+
+.services .row .service:hover {
+    transform: scale(1.1);
+    background-color: Indigo;
+    color: #f1f1f1;
+}
+
+.services .row .service i {
+    font-size: 40px;
+    color: Navy;
+    margin-bottom: 10px;
+}
+
+.services .row .service:hover i {
+    color: #fff;
+}
+
+.services .row .service h2 {
+    margin-bottom: 8px;
+}
+
+/*Testimonial Styling*/
+.testimonials {
+    padding: 40px 0;
+    background: #f1f1f1;
+    color: #434343;
+    text-align: center;
+}
+
+.testimonials h1 {
+    text-transform: uppercase;
+}
+
+.inner {
+    max-width: 1200px;
+    margin: auto;
+    overflow: hidden;
+    padding: 0 20px;
+}
+
+.border {
+    width: 160px;
+    height: 5px;
+    background: darkblue;
+    margin: 26px auto;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.col {
+    flex: 33.33%;
+    max-width: 33.33%;
+    box-sizing: border-box;
+    padding: 15px;
+}
+
+.testimonial {
+    background: #fff;
+    padding: 30px;
+}
+
+.testimonial .content {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.subContent {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-top: 10px;
+    opacity: 0.8;
+}
+
+
+.testimonial img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.name {
+    font-size: 20px;
+    text-transform: uppercase;
+    margin: 20px 0;
+}
+
+@media screen and (max-width:960px) {
+    .col {
+        flex: 100%;
+        max-width: 80%;
+    }
+}
+
+@media screen and (max-width:600px) {
+    .col {
+        flex: 100%;
+        max-width: 100%;
+    }
 }
 
 /* Footer Styling */
@@ -136,4 +385,3 @@ header {
     text-align: center;
     margin-top: 15px;
 }
-

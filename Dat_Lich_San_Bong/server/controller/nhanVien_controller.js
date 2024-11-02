@@ -1,10 +1,9 @@
 const { NhanVienModel } = require("../model/nhanVien_model");
 const mongoose = require("mongoose");
-const COMMON = require("../COMMON");
 
 exports.getListStaffs = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const NhanViens = await NhanVienModel.find()
       .populate("id_NguoiDung")
       .populate("id_CaLamViec")
@@ -20,7 +19,7 @@ exports.getListStaffs = async (req, res, next) => {
 
 exports.addStaff = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const { id_NguoiDung, id_CaLamViec, NgayVaoLam, NgayThoiLam } = req.body;
 
     const newNhanVien = new NhanVienModel({
@@ -40,7 +39,7 @@ exports.addStaff = async (req, res, next) => {
 
 exports.updateStaff = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const id_NhanVien = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id_NhanVien)) {
@@ -65,7 +64,7 @@ exports.updateStaff = async (req, res, next) => {
 
 exports.deleteStaff = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const id_NhanVien = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id_NhanVien)) {

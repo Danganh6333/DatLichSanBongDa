@@ -1,10 +1,9 @@
 const { TheLoaiModel } = require("../model/theLoai_model");
 const mongoose = require("mongoose");
-const COMMON = require("../../COMMON");
 
 exports.getListCategories = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const TheLoais = await TheLoaiModel.find().sort({ createdAt: -1 });
     console.log(TheLoais);
 
@@ -17,7 +16,7 @@ exports.getListCategories = async (req, res, next) => {
 
 exports.addCategory = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const { tenTheLoai } = req.body;
 
     let anhTheLoai = null;
@@ -38,7 +37,7 @@ exports.addCategory = async (req, res, next) => {
 
 exports.updateCategory = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const id_TheLoai = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id_TheLoai)) {
@@ -69,7 +68,7 @@ exports.updateCategory = async (req, res, next) => {
 
 exports.deleteCategory = async (req, res, next) => {
   try {
-    await mongoose.connect(COMMON.uri);
+    await mongoose.connect(process.env.MONGO_URI);
     const id_TheLoai = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id_TheLoai)) {

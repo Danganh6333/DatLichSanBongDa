@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-const COMMON = require("../COMMON");
 mongoose
-  .connect(COMMON.uri)
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("đã kết nối thành công");
   })

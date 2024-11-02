@@ -12,7 +12,7 @@
   --font-size-xl: clamp(2.44rem, 2.38vw + 1.85rem, 3.75rem);
   --border-radius: 10px;
 }
-
+/* General Styles */
 * {
   margin: 0;
   padding: 0;
