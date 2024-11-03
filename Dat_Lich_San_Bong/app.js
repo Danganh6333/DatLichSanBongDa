@@ -15,7 +15,6 @@ const {isActiveRoute} = require('./server/helpers/routeHelpers')
 var indexRouter = require('./server/routes/index');
 var API = require('./server/routes/API/API_routes');
 
-
 var app = express();
 
 app.use(logger('dev'));

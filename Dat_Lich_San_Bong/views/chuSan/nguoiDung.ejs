@@ -1,1 +1,7 @@
-<h1>Hello</h1>
+<ul class="nguoiDungDatalist">
+    <% NguoiDungs.forEach( nguoiDung=> { %>
+        <li>
+           <h1><%= nguoiDung.hoTen  %></h1>
+        </li>
+    <% }) %>
+</ul>
