@@ -1,20 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= locals.title %>
-    </title>
-    <meta name="description" content="<%= locals.description %>">
-    <link rel="stylesheet" href="/stylesheets/chuSan.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= locals.title %></title>
+    <meta name="description" content="<%= locals.description %>" />
+    <link rel="stylesheet" href="/stylesheets/chuSan.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css"
+    />
     <script type="text/javascript" defer src="/javascripts/chuSan.js"></script>
-</head>
-<body >
-    <%- body %>
-</body>
+  </head>
 
+  <body>
+    <nav id="sidebar" class="close">
+      <div class="header">
+        <img class="logo" src="/images/logo_black.png" alt="" srcset="" />
+        <button id="toggle-btn" onclick="toggleSidebar()">
+          <i class="fas fa-angle-double-right"></i>
+        </button>
+      </div>
+      <ul>
+        <li class="<%= isActiveRoute('/chuSan', locals.currentRoute)%>">
+          <a href="/chuSan/nhanVien"
+            ><i class="fas fa-user"></i><span>Quản Lý Nhân Viên</span></a
+          >
+        </li>
+        <li class="<%= isActiveRoute('/sanBong', locals.currentRoute)%>">
+          <a href="/chuSan/sanBong"
+            ><i class="fas fa-futbol"></i><span>Quản Lý Sân Bóng</span></a
+          >
+        </li>
+        <li class="<%= isActiveRoute('/doThue', locals.currentRoute)%>">
+          <a href="/chuSan/doThue"
+            ><i class="fas fa-box-open"></i><span>Quản Lý Đồ Thuê</span></a
+          >
+        </li>
+        <li class="<%= isActiveRoute('/nuocUong', locals.currentRoute)%>">
+          <a href="/chuSan/nuocUong"
+            ><i class="fas fa-glass-cheers"></i
+            ><span>Quản Lý Nước Uống</span></a
+          >
+        </li>
+        <li class="<%= isActiveRoute('/ca', locals.currentRoute)%>">
+          <a href="/chuSan/ca">
+            <i class="fas fa-clock"></i><span>Quản Lý Ca</span></a
+          >
+        </li>
+        <li class="<%= isActiveRoute('/giaoCa', locals.currentRoute)%>">
+          <a href="/chuSan/giaoCa"
+            ><i class="fas fa-exchange-alt"></i><span>Quản Lý Giao Ca</span></a
+          >
+        </li>
+        <li class="<%= isActiveRoute('/thongKe', locals.currentRoute)%>">
+          <a href="/chuSan/thongKe"
+            ><i class="fas fa-chart-bar"></i><span>Thống Kê</span></a
+          >
+        </li>
+      </ul>
+      <div id="account-section">
+        <img src="/images/account.png" alt="Account Picture" />
+        <span class="account-name"> <%=locals.userName%> </span>
+        <i class="fas fa-sign-out-alt logout-icon"></i>
+      </div>
+    </nav>
+    <main>
+      <div class="container"><%- body %></div>
+    </main>
+  </body>
 </html>

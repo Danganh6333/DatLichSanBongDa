@@ -41,9 +41,12 @@ header {
 }
 
 .logo {
+    margin-right: auto;
+}
+
+.logo img {
     width: 90px;
     height: auto;
-    margin-right: auto;
 }
 
 .nav__links {
@@ -144,10 +147,12 @@ header {
     transform: translate(-50%, -50%);
     display: block;
 }
+
 @keyframes spin {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }

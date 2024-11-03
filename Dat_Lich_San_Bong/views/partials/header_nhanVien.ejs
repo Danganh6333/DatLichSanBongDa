@@ -1,0 +1,16 @@
+<header>
+    <a href="/khachHang" class="logo"><img src="/images/logo_black.png" alt="Logo" ></a>
+    <nav>
+        <ul class="nav__links">
+            <li><a href="/khachHang" class="<%= isActiveRoute('/khachHang', locals.currentRoute)%>">Check In</a></li>
+            <li><a href="/datLich" class="<%= isActiveRoute('/datLich', locals.currentRoute) %>">Đặt Lịch</a></li>
+            <li><a href="/khachHang" class="<%= isActiveRoute('/khachHang', locals.currentRoute)%>">Trang Chủ</a></li>
+            <li><a href="/datLich" class="<%= isActiveRoute('/datLich', locals.currentRoute) %>">Đặt Lịch</a></li>
+        </ul>
+    </nav>
+    <div class="profile">
+        <img src="/images/account.png" alt="Profile Picture" class="profile-pic">
+        <span class="profile-name"><%= locals.userName || "Khách" %></span>
+
+    </div>
+</header>
