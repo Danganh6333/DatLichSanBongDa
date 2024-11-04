@@ -1,16 +1,21 @@
 const { DichVuModel } = require("../model/dichVu_model");
 const mongoose = require("mongoose");
 
+const chuSanLayout = "../views/layouts/chuSan";
+
 exports.getListServices = async (req, res, next) => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    const DichVus = await DichVuModel.find().sort({ createdAt: -1 });
-    console.log(DichVus);
-
-    res.status(200).json(DichVus);
+    const locals = {
+      title: "Trang Chủ",
+      description:
+        "Website đặt sân bóng dễ dàng và nhanh chóng, cung cấp dịch vụ đặt lịch, thanh toán trực tuyến, và hỗ trợ quản lý sân cho chủ sở hữu.",
+      userName: req.user.hoTen,
+      currentRoute: `/doThue`,
+    };
+    const data = await DichVuModel.find().sort({ createdAt: -1 });
+    res.render("chuSan/doThue", { locals, layout: chuSanLayout, data });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Lỗi khi lấy danh sách dịch vụ" });
+    console.log(error);
   }
 };
 

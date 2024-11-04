@@ -1,18 +1,23 @@
 const { CaLamViecModel } = require("../model/caLamViec_model");
 const mongoose = require("mongoose");
+const chuSanLayout = "../views/layouts/chuSan";
 
 exports.getListShifts = async (req, res, next) => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    const CaLamViecs = await CaLamViecModel.find()
+    const locals = {
+      title: "Trang Chủ",
+      description:
+        "Website đặt sân bóng dễ dàng và nhanh chóng, cung cấp dịch vụ đặt lịch, thanh toán trực tuyến, và hỗ trợ quản lý sân cho chủ sở hữu.",
+      userName: req.user.hoTen,
+      currentRoute: `/ca`,
+    };
+    const data = await CaLamViecModel.find()
       .populate("id_NhanVien")
       .sort({ createdAt: -1 });
-    console.log(CaLamViecs);
-
-    res.status(200).json(CaLamViecs);
+    res.render("chuSan/ca", { locals, layout: chuSanLayout,data });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Lỗi khi lấy danh sách ca làm việc" });
+    console.log(error);
   }
 };
 

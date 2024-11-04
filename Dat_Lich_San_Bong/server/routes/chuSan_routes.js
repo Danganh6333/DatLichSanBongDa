@@ -1,48 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const { authenticate, authorize } = require("../middleware/authMiddleware");
-const {getListUsers} = require("../controller/nguoiDung_controller")
+const { getListUsers } = require("../controller/nguoiDung_controller");
+const { getListFields,addField,deleteField } = require("../controller/sanBong_controller");
+const { getListShifts } = require("../controller/caLamViec_controller");
+const { getListServices } = require("../controller/dichVu_controller");
+const { getListProducts } = require("../controller/sanPham_controller");
 
 const chuSanLayout = "../views/layouts/chuSan";
 
-router.get("/chuSan/nguoiDung", authenticate, authorize("admin"),getListUsers);
+router.get("/chuSan/nguoiDung", authenticate, authorize("admin"), getListUsers);
+router.get("/chuSan/sanBong", authenticate, authorize("admin"), getListFields);
+router.post("/chuSan/sanBong/themSanBong",authenticate, authorize("admin"),addField)
+router.delete("/chuSan/sanBong/xoaSanBong/:id",authenticate,authorize("admin"),deleteField)
+router.get("/chuSan/ca", authenticate, authorize("admin"), getListShifts);
+router.get("/chuSan/doThue", authenticate, authorize("admin"), getListServices);
+router.get("/chuSan/nuocUong",authenticate,authorize("admin"),getListProducts);
 
-router.get("/chuSan/ca", authenticate, authorize("admin"), async (req, res) => {
-  try {
-    const locals = {
-      title: "Trang Chủ",
-      description:
-        "Website đặt sân bóng dễ dàng và nhanh chóng, cung cấp dịch vụ đặt lịch, thanh toán trực tuyến, và hỗ trợ quản lý sân cho chủ sở hữu.",
-      userName: req.user.hoTen,
-      currentRoute: `/ca`,
-    };
-
-    res.render("chuSan/ca", { locals, layout: chuSanLayout });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-router.get(
-  "/chuSan/doThue",
-  authenticate,
-  authorize("admin"),
-  async (req, res) => {
-    try {
-      const locals = {
-        title: "Trang Chủ",
-        description:
-          "Website đặt sân bóng dễ dàng và nhanh chóng, cung cấp dịch vụ đặt lịch, thanh toán trực tuyến, và hỗ trợ quản lý sân cho chủ sở hữu.",
-        userName: req.user.hoTen,
-        currentRoute: `/doThue`,
-      };
-
-      res.render("chuSan/doThue", { locals, layout: chuSanLayout });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-);
 router.get(
   "/chuSan/giaoCa",
   authenticate,
@@ -63,46 +37,7 @@ router.get(
     }
   }
 );
-router.get(
-  "/chuSan/nuocUong",
-  authenticate,
-  authorize("admin"),
-  async (req, res) => {
-    try {
-      const locals = {
-        title: "Trang Chủ",
-        description:
-          "Website đặt sân bóng dễ dàng và nhanh chóng, cung cấp dịch vụ đặt lịch, thanh toán trực tuyến, và hỗ trợ quản lý sân cho chủ sở hữu.",
-        userName: req.user.hoTen,
-        currentRoute: `/nuocUong`,
-      };
 
-      res.render("chuSan/nuocUong", { locals, layout: chuSanLayout });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-);
-router.get(
-  "/chuSan/sanBong",
-  authenticate,
-  authorize("admin"),
-  async (req, res) => {
-    try {
-      const locals = {
-        title: "Trang Chủ",
-        description:
-          "Website đặt sân bóng dễ dàng và nhanh chóng, cung cấp dịch vụ đặt lịch, thanh toán trực tuyến, và hỗ trợ quản lý sân cho chủ sở hữu.",
-        userName: req.user.hoTen,
-        currentRoute: `/sanBong`,
-      };
-
-      res.render("chuSan/sanBong", { locals, layout: chuSanLayout });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-);
 router.get(
   "/chuSan/thongKe",
   authenticate,

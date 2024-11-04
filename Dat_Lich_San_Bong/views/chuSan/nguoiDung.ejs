@@ -1,7 +1,32 @@
-<ul class="nguoiDungDatalist">
-    <% NguoiDungs.forEach( nguoiDung=> { %>
-        <li>
-           <h1><%= nguoiDung.hoTen  %></h1>
-        </li>
-    <% }) %>
-</ul>
+<div>
+
+</div>
+<section class="table">
+    <table class="fl-table">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tên Hiển Thị</th>
+                <th>Email</th>
+                <th>Số Điện Thoại</th>
+                <th>Trạng Thái</th>
+                <th>Thao Tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% data.forEach((nguoiDung, index) => { %>
+                <tr>
+                    <td><%= index + 1 %></td> 
+                    <td><%= nguoiDung.hoTen %></td> 
+                    <td><%= nguoiDung.email %></td> 
+                    <td><%= nguoiDung.phoneNumber %></td> 
+                    <td><%= nguoiDung.trangThai %></td> 
+                    <td>
+                        <button onclick="editUser('<%= nguoiDung._id %>')">Edit</button>
+                        <button onclick="deleteUser('<%= nguoiDung._id %>')">Delete</button>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</section>

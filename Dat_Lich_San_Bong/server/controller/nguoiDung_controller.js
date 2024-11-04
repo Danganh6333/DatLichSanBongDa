@@ -60,7 +60,7 @@ exports.SignIn = async (req, res, next) => {
     } else if (user.vaiTro === "staff") {
       res.cookie("token", token, { httpOnly: true }).redirect("/nhanVien");
     } else if (user.vaiTro === "admin") {
-      res.cookie("token", token, { httpOnly: true }).redirect("/chuSan");
+      res.cookie("token", token, { httpOnly: true }).redirect("/chuSan/nguoiDung");
     } else {
       res.status(400).json({ message: "Vai trò không xác định." });
     }
@@ -80,8 +80,8 @@ exports.getListUsers = async (req, res, next) => {
       userName: req.user.hoTen,
       currentRoute: `/chuSan`,
     };
-
-    res.render("chuSan/nguoiDung", { locals, layout: chuSanLayout });
+    const data = await NguoiDungModel.find().sort({ createdAt: -1 });
+    res.render("chuSan/nguoiDung", { locals, layout: chuSanLayout, data });
   } catch (error) {
     console.log(error);
   }

@@ -37,6 +37,9 @@ main {
     margin-bottom: 20px;
     padding: 2em;
     background-color: var(--hover-clr);
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
 }
 
 h2 {
@@ -132,6 +135,7 @@ h2 {
 #sidebar.close a span {
     display: none;
 }
+
 #sidebar.close #toggle-btn {
     justify-content: center;
 }
@@ -173,4 +177,222 @@ h2 {
 #sidebar.close #account-section .account-name,
 #sidebar.close #account-section .logout-icon {
     display: none;
+}
+
+/* Table Styles */
+.table {
+
+    grid-column: 2 / 3;
+}
+
+.fl-table {
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+    background-color: white;
+}
+
+.fl-table td,
+.fl-table th {
+    text-align: center;
+    padding: 8px;
+}
+
+.fl-table td {
+    border-right: 1px solid #f8f8f8;
+    font-size: 12px;
+}
+
+.fl-table thead th {
+    color: #ffffff;
+    background: darkblue;
+}
+
+
+.fl-table thead th:nth-child(odd) {
+    color: #ffffff;
+    background: #324960;
+}
+
+.fl-table tr:nth-child(even) {
+    background: #F8F8F8;
+}
+
+/* Responsive */
+
+@media (max-width: 767px) {
+    .fl-table {
+        display: block;
+        width: 100%;
+    }
+
+    .table-wrapper:before {
+        content: "Scroll horizontally >";
+        display: block;
+        text-align: right;
+        font-size: 11px;
+        color: white;
+        padding: 0 0 10px;
+    }
+
+    .fl-table thead,
+    .fl-table tbody,
+    .fl-table thead th {
+        display: block;
+    }
+
+    .fl-table thead th:last-child {
+        border-bottom: none;
+    }
+
+    .fl-table thead {
+        float: left;
+    }
+
+    .fl-table tbody {
+        width: auto;
+        position: relative;
+        overflow-x: auto;
+    }
+
+    .fl-table td,
+    .fl-table th {
+        padding: 20px .625em .625em .625em;
+        height: 60px;
+        vertical-align: middle;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        overflow-y: auto;
+        width: 120px;
+        font-size: 13px;
+        text-overflow: ellipsis;
+    }
+
+    .fl-table thead th {
+        text-align: left;
+        border-bottom: 1px solid #f7f7f9;
+    }
+
+    .fl-table tbody tr {
+        display: table-cell;
+    }
+
+    .fl-table tbody tr:nth-child(odd) {
+        background: none;
+    }
+
+    .fl-table tr:nth-child(even) {
+        background: transparent;
+    }
+
+    .fl-table tr td:nth-child(odd) {
+        background: #F8F8F8;
+        border-right: 1px solid #E6E4E4;
+    }
+
+    .fl-table tr td:nth-child(even) {
+        border-right: 1px solid #E6E4E4;
+    }
+
+    .fl-table tbody td {
+        display: block;
+        text-align: center;
+    }
+}
+
+/*Form Styling*/
+.post {
+    position: relative;
+    max-width: 400px;
+    width: 100%;
+    padding: 25px;
+    background: #F8F8F8;
+    border-radius: 8px;
+    .post {
+        grid-column: 1 / 2;
+    }
+}
+
+.post h3 {
+    font-size: 1.5rem;
+    color: #333;
+    font-weight: 800;
+    text-align: center;
+}
+
+.post .form {
+    margin-top: 30px;
+}
+
+.post input-box {
+    width: 100%;
+    margin-top: 25px;
+}
+
+.post label {
+    color: #333;
+}
+
+.post .input-box input {
+    position: relative;
+    height: 50px;
+    width: 100%;
+    outline: none;
+    margin-top: 8px;
+    font: 1rem;
+    color: #707070;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 0 15px;
+}
+
+.post .submit-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: var(--accent-clr);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.post .submit-btn:hover {
+    background-color: #4a54d1;
+}
+
+/*Check-box Styling*/
+.post .status-box .status-option {
+    display: flex;
+}
+
+.post .status-box :where(.status-option,.status){
+    display: flex;
+    align-items: center;
+    column-gap: 50px;
+}
+
+.post .status-box{
+    margin-top: 20px;
+}
+
+.post .status-box {
+    margin-bottom: 8px;
+}
+
+.post .status {
+    column-gap: 5px;
+    cursor: pointer;
+}
+
+.post :where(.status input, .status label) {
+    cursor: pointer;
 }

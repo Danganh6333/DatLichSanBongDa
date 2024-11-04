@@ -1,11 +1,6 @@
 const db = require("../config/db")
 
 const SanPhamSchema = new db.Schema({
-    id_TheLoai : {
-        type: db.Schema.Types.ObjectId,
-        ref: "TheLoaiModel",
-        required :true
-    },
     tenSanPham : {
         type : String,
         required : true

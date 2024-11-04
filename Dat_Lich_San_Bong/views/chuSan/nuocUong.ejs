@@ -1,0 +1,30 @@
+<section class="table">
+    <table class="fl-table">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tên Sản Phẩm</th>
+                <th>Mô Tả Sản Phẩm</th>
+                <th>Ảnh Sản Phẩm</th>
+                <th>Giá Sản Phẩm</th>
+                <th>Hàng Tồn Kho</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% data.forEach((nguoiDung, index) => { %>
+                <tr>
+                    <td><%= index + 1 %></td> 
+                    <td><%= nguoiDung.tenSanPham %></td> 
+                    <td><%= nguoiDung.moTaSanPham %></td> 
+                    <td><%= nguoiDung.anhSanPham %></td> 
+                    <td><%= nguoiDung.giaSanPham  %></td> 
+                    <td><%= nguoiDung.hangTonKho  %></td> 
+                    <td>
+                        <button onclick="editUser('<%= nguoiDung._id %>')">Edit</button>
+                        <button onclick="deleteUser('<%= nguoiDung._id %>')">Delete</button>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</section>

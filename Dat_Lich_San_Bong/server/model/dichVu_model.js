@@ -13,6 +13,14 @@ const DichVuSchema = new db.Schema(
     giaDichVu : {
       type : Number,
       required : true
+    },
+    trangThai:{
+      type : String,
+      enum : ["Dừng Kinh Doanh","Đang Kinh Doanh"]
+    },
+    soLuong:{
+      type : Number,
+      required : true
     }
   },
   {

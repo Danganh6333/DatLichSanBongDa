@@ -12,9 +12,6 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const {isActiveRoute} = require('./server/helpers/routeHelpers')
 
-var indexRouter = require('./server/routes/index');
-var API = require('./server/routes/API/API_routes');
-
 var app = express();
 
 app.use(logger('dev'));
@@ -43,6 +40,8 @@ app.use('/', require('./server/routes/auth_routes'));
 app.use('/', require('./server/routes/khachHang_routes'));
 app.use('/', require('./server/routes/nhanVien_routes'));
 app.use('/', require('./server/routes/chuSan_routes'));
+app.use('/API',require('./server/routes/api_routes'));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -16,7 +16,7 @@ const SanBongSchema = new db.Schema({
     },
     trangThai : {
         type : String,
-        enum : ["Trống","Đang Dùng","Bảo Trì"]
+        enum : ["Đang Dùng","Bảo Trì"]
     }
 },{
     collection : "sanBongs"

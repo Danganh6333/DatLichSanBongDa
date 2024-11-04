@@ -1,18 +1,23 @@
 const { SanBongModel } = require("../model/sanBong_model");
 const mongoose = require("mongoose");
 
+const chuSanLayout = "../views/layouts/chuSan";
 exports.getListFields = async (req, res, next) => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    const SanBongs = await SanBongModel.find().sort({ createdAt: -1 });
-    console.log(SanBongs);
+    const locals = {
+      title: "Trang Chủ",
+      description:
+        "Website đặt sân bóng dễ dàng và nhanh chóng, cung cấp dịch vụ đặt lịch, thanh toán trực tuyến, và hỗ trợ quản lý sân cho chủ sở hữu.",
+      userName: req.user.hoTen,
+      currentRoute: `/sanBong`,
+    };
+    const data = await SanBongModel.find().sort({ createdAt: -1 });
 
-    res.status(200).json(SanBongs);
+    res.render("chuSan/sanBong", { locals, layout: chuSanLayout, data });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Lỗi khi lấy danh sách sân bóng" });
+    console.log(error);
   }
-};
+}
 
 exports.addField = async (req, res, next) => {
   try {
@@ -24,11 +29,10 @@ exports.addField = async (req, res, next) => {
       diaDiem,
       giaTheoGio,
       trangThai,
-    });
+    }); 
+    await newSanBong.save();
+    res.status(201).json(newSanBong);
 
-    const savedSanBong = await newSanBong.save();
-
-    res.status(201).json(savedSanBong);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi thêm sân bóng" });

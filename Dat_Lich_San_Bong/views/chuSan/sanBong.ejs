@@ -1,0 +1,73 @@
+<section class="post">
+    <h3>Thêm Sân Bóng</h3>
+    <form action="/themSanBong" class="form" method="post">
+        <div class="input-box">
+            <label>Tên Sân Bóng</label>
+            <input type="text" placeholder="Mời Nhập Tên Sân Bóng" id="" name="tenSan" required>
+        </div>
+        <div class="input-box">
+            <label>Địa Điểm</label>
+            <input type="text" placeholder="Mời Nhập Địa Điểm" id="" name="diaDiem" required >
+        </div>
+        <div class="input-box">
+            <label>Giá Theo Giờ</label>
+            <input type="text" placeholder="Mời Nhập Giá" id="" name="giaTheoGio" min="0" max="2000000" required>
+        </div>
+        <div class="status-box">
+            <label>Trạng Thái</label>
+            <div class="status-option">
+                <div class="status">
+                    <input type="radio"  name="trangThai" value="Đang Dùng" id="check-in-use" checked>
+                    <label for="check">Đang Dùng</label>
+                </div>
+                <div class="status">
+                    <input type="radio"  name="trangThai" value="Bảo Trì" id="check-maintainance">
+                    <label for="check">Bảo Trì</label>
+                </div>
+            </div>
+        </div>
+        <input type="submit" class="submit-btn" value="Thêm Sân Bóng">
+    </form>
+</section>
+<section class="table">
+    <h2 class="header">Danh Sách Sân Bóng</h2>
+    <table class="fl-table">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tên Sân</th>
+                <th>Địa Điểm</th>
+                <th>Giá Theo Giờ</th>
+                <th>Trạng Thái</th>
+                <th>Thao Tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% data.forEach((sanBong, index)=> { %>
+                <tr>
+                    <td>
+                        <%= index + 1 %>
+                    </td>
+                    <td>
+                        <%= sanBong.tenSan %>
+                    </td>
+                    <td>
+                        <%= sanBong.diaDiem %>
+                    </td>
+                    <td>
+                        <%= sanBong.giaTheoGio %>
+                    </td>
+                    <td>
+                        <%= sanBong.trangThai %>
+                    </td>
+                    <td>
+                        <button onclick="editUser('<%= sanBong._id %>')">Edit</button>
+                        <form action="/chuSan/sanBong/xoaSanBong/<%= sanBong._id %>?_method=DELETE" method="post">
+                            <input type="submit" value="Delete" class="btn-delete">
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</section>
