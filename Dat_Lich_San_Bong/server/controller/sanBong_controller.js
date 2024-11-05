@@ -17,7 +17,7 @@ exports.getListFields = async (req, res, next) => {
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 exports.addField = async (req, res, next) => {
   try {
@@ -29,10 +29,9 @@ exports.addField = async (req, res, next) => {
       diaDiem,
       giaTheoGio,
       trangThai,
-    }); 
+    });
     await newSanBong.save();
-    res.status(201).json(newSanBong);
-
+    res.redirect("/chuSan/sanBong");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi thêm sân bóng" });
@@ -51,13 +50,13 @@ exports.updateField = async (req, res, next) => {
 
     const { tenSan, diaDiem, giaTheoGio, trangThai } = req.body;
 
-    const updatedSanBong = await SanBongModel.findByIdAndUpdate(
+    await SanBongModel.findByIdAndUpdate(
       id_SanBong,
       { tenSan, giaTheoGio, trangThai },
       { new: true }
     );
 
-    res.status(200).json(updatedSanBong);
+    res.redirect("/chuSan/sanBong");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi cập nhật sân bóng" });
@@ -73,8 +72,8 @@ exports.deleteField = async (req, res, next) => {
       return res.status(400).json({ message: "ID không hợp lệ!" });
     }
 
-    const deletedSanBong = await SanBongModel.findByIdAndDelete(id_SanBong);
-    res.status(200).json(deletedSanBong);
+    await SanBongModel.findByIdAndDelete(id_SanBong);
+    res.redirect("/chuSan/sanBong");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi xóa sân bóng" });

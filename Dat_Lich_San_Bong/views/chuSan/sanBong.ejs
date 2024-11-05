@@ -1,13 +1,13 @@
 <section class="post">
     <h3>Thêm Sân Bóng</h3>
-    <form action="/themSanBong" class="form" method="post">
+    <form id="sanBongForm" class="form" action="sanBong/themSanBong" method="post">
         <div class="input-box">
             <label>Tên Sân Bóng</label>
             <input type="text" placeholder="Mời Nhập Tên Sân Bóng" id="" name="tenSan" required>
         </div>
         <div class="input-box">
             <label>Địa Điểm</label>
-            <input type="text" placeholder="Mời Nhập Địa Điểm" id="" name="diaDiem" required >
+            <input type="text" placeholder="Mời Nhập Địa Điểm" id="" name="diaDiem" required>
         </div>
         <div class="input-box">
             <label>Giá Theo Giờ</label>
@@ -17,16 +17,16 @@
             <label>Trạng Thái</label>
             <div class="status-option">
                 <div class="status">
-                    <input type="radio"  name="trangThai" value="Đang Dùng" id="check-in-use" checked>
+                    <input type="radio" name="trangThai" value="Đang Dùng" id="check-in-use" checked>
                     <label for="check">Đang Dùng</label>
                 </div>
                 <div class="status">
-                    <input type="radio"  name="trangThai" value="Bảo Trì" id="check-maintainance">
+                    <input type="radio" name="trangThai" value="Bảo Trì" id="check-maintainance">
                     <label for="check">Bảo Trì</label>
                 </div>
             </div>
         </div>
-        <input type="submit" class="submit-btn" value="Thêm Sân Bóng">
+        <input type="submit" value="Thêm Sân Bóng" class="submit-btn">
     </form>
 </section>
 <section class="table">
@@ -42,7 +42,7 @@
                 <th>Thao Tác</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="sanBongTable">
             <% data.forEach((sanBong, index)=> { %>
                 <tr>
                     <td>
@@ -61,13 +61,26 @@
                         <%= sanBong.trangThai %>
                     </td>
                     <td>
-                        <button onclick="editUser('<%= sanBong._id %>')">Edit</button>
-                        <form action="/chuSan/sanBong/xoaSanBong/<%= sanBong._id %>?_method=DELETE" method="post">
-                            <input type="submit" value="Delete" class="btn-delete">
+                        <button class="icon-btn open-popup">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <form action="sanBong/xoaSanBong/<%= sanBong._id %>?_method=DELETE" method="post">
+                            <button class="icon-btn" type="submit">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
                         </form>
                     </td>
                 </tr>
                 <% }) %>
         </tbody>
     </table>
+    <div id="pagination" class="pagination-controls"></div>
 </section>
+<dialog close>
+    <h2>Pop Up Title</h2>
+    <p>Lorem Ipsum</p>
+    <div class="controls">
+        <button type="button" class="close-btn">Close</button>
+        <button>Lưu</button>
+    </div>
+</dialog>
