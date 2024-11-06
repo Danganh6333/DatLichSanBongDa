@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { authenticate, authorize } = require("../middleware/authMiddleware");
 const { getListUsers  } = require("../controller/nguoiDung_controller");
-const { getListFields,addField,deleteField } = require("../controller/sanBong_controller");
+const { getListFields,addField,deleteField,updateField } = require("../controller/sanBong_controller");
 const { getListShifts } = require("../controller/caLamViec_controller");
 const { getListServices } = require("../controller/dichVu_controller");
 const { getListProducts } = require("../controller/sanPham_controller");
@@ -22,7 +22,8 @@ router.get("/chuSan/nguoiDung", authenticate, authorize("admin"), getListUsers);
 router.get("/chuSan/sanBong", authenticate, authorize("admin"), getListFields);
 router.post("/chuSan/sanBong/themSanBong", authenticate, authorize("admin"),addField)
 router.delete("/chuSan/sanBong/xoaSanBong/:id", authenticate, authorize("admin"),deleteField)
-router.delete("/chuSan/sanBong/suaSanBong", authenticate, authorize("admin"),deleteField)
+router.put("/chuSan/sanBong/suaSanBong/:id", authenticate, authorize("admin"),updateField)
+
 /**
  * Get
  * /ca
@@ -40,6 +41,7 @@ router.get("/chuSan/doThue", authenticate, authorize("admin"), getListServices);
  * /nuocUong
  */
 router.get("/chuSan/nuocUong",authenticate,authorize("admin"),getListProducts);
+
 
 router.get(
   "/chuSan/giaoCa",

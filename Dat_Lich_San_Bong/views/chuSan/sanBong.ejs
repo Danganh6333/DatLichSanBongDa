@@ -14,15 +14,15 @@
             <input type="text" placeholder="Mời Nhập Giá" id="" name="giaTheoGio" min="0" max="2000000" required>
         </div>
         <div class="status-box">
-            <label>Trạng Thái</label>
+            <label class="status-label">Trạng Thái</label>
             <div class="status-option">
                 <div class="status">
                     <input type="radio" name="trangThai" value="Đang Dùng" id="check-in-use" checked>
-                    <label for="check">Đang Dùng</label>
+                    <label for="check-in-use">Đang Dùng</label>
                 </div>
                 <div class="status">
                     <input type="radio" name="trangThai" value="Bảo Trì" id="check-maintainance">
-                    <label for="check">Bảo Trì</label>
+                    <label for="check-maintainance">Bảo Trì</label>
                 </div>
             </div>
         </div>
@@ -30,7 +30,17 @@
     </form>
 </section>
 <section class="table">
-    <h2 class="header">Danh Sách Sân Bóng</h2>
+    <div class="table-header">
+        <h2 class="header">Danh Sách Sân Bóng</h2>
+        <div class="search">
+            <form id="searchForm">
+                <input type="text" id="searchBox" class="searchTerm" placeholder="Tìm kiếm theo tên sân bóng..." />
+                <button type="submit" class="searchButton">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
     <table class="fl-table">
         <thead>
             <tr>
@@ -61,14 +71,18 @@
                         <%= sanBong.trangThai %>
                     </td>
                     <td>
-                        <button class="icon-btn open-popup">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <form action="sanBong/xoaSanBong/<%= sanBong._id %>?_method=DELETE" method="post">
-                            <button class="icon-btn" type="submit">
-                                <i class="fas fa-trash-alt"></i>
+                        <div class="controls">
+                            <button class="icon-btn open-popup" data-id="<%= sanBong._id %>"
+                                data-tenSan="<%= sanBong.tenSan %>" data-diaDiem="<%= sanBong.diaDiem %>"
+                                data-giaTheoGio="<%= sanBong.giaTheoGio %>" data-trangThai="<%= sanBong.trangThai %>">
+                                <i class="fas fa-edit"></i>
                             </button>
-                        </form>
+                            <form action="sanBong/xoaSanBong/<%= sanBong._id %>?_method=DELETE" method="post">
+                                <button class="icon-btn" type="submit">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 <% }) %>
@@ -76,11 +90,142 @@
     </table>
     <div id="pagination" class="pagination-controls"></div>
 </section>
-<dialog close>
-    <h2>Pop Up Title</h2>
-    <p>Lorem Ipsum</p>
-    <div class="controls">
-        <button type="button" class="close-btn">Close</button>
-        <button>Lưu</button>
-    </div>
+<dialog id="editModal" close>
+    <h2>Chỉnh Sửa Sân Bóng</h2>
+    <form id="editForm" method="post">
+        <input type="hidden" name="_id" id="edit-id">
+        <div class="input-box">
+            <label>Tên Sân Bóng</label>
+            <input type="text" placeholder="Mời Nhập Tên Sân Bóng" id="edit-tenSan" name="tenSan" required value="">
+        </div>
+        <div class="input-box">
+            <label>Địa Điểm</label>
+            <input type="text" placeholder="Mời Nhập Địa Điểm" id="edit-diaDiem" name="diaDiem" required value="">
+        </div>
+        <div class="input-box">
+            <label>Giá Theo Giờ</label>
+            <input type="text" placeholder="Mời Nhập Giá" id="edit-giaTheoGio" name="giaTheoGio" min="0" max="2000000"
+                required value="">
+        </div>
+        <div class="status-box">
+            <label>Trạng Thái</label>
+            <div class="status-option">
+                <div class="status">
+                    <input type="radio" name="trangThai" value="Đang Dùng" id="edit-check-in-use">
+                    <label for="edit-check-in-use">Đang Dùng</label>
+                </div>
+                <div class="status">
+                    <input type="radio" name="trangThai" value="Bảo Trì" id="edit-check-maintainance">
+                    <label for="edit-check-maintainance">Bảo Trì</label>
+                </div>
+            </div>
+        </div>
+        <div class="controls">
+            <button type="button" class="close-btn">Đóng</button>
+            <button type="submit">Lưu</button>
+        </div>
+    </form>
 </dialog>
+<script type="text/javascript">
+    const dialog = document.querySelector("dialog");
+    const openPopupButtons = document.querySelectorAll(".open-popup");
+    const tableBody = document.getElementById("sanBongTable");
+    const pagination = document.getElementById("pagination");
+    const data = Array.from(tableBody.querySelectorAll("tr"));
+    const editButtons = document.querySelectorAll('.open-popup');
+    const editModal = document.getElementById('editModal');
+    const closeModalButton = document.querySelector('.close-btn');
+    const searchBox = document.getElementById('searchBox');
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.classList.toggle("close");
+        const icon = document.querySelector("#toggle-btn i");
+        icon.classList.toggle("fa-angle-double-left");
+        icon.classList.toggle("fa-angle-double-right");
+    }
+
+    function openEditModal(sanBong) {
+
+        const formAction = `sanBong/suaSanBong/${sanBong._id}?_method=PUT`;
+        document.getElementById('editForm').action = formAction;
+
+        document.getElementById('edit-id').value = sanBong._id;
+        document.getElementById('edit-tenSan').value = sanBong.tenSan;
+        document.getElementById('edit-diaDiem').value = sanBong.diaDiem;
+        document.getElementById('edit-giaTheoGio').value = sanBong.giaTheoGio;
+
+        const statusRadios = document.getElementsByName('trangThai');
+        statusRadios.forEach(radio => {
+            radio.checked = radio.value === sanBong.trangThai;
+        });
+
+        editModal.showModal();
+    }
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const sanBongData = {
+                _id: button.getAttribute('data-id'),
+                tenSan: button.getAttribute('data-tenSan'),
+                diaDiem: button.getAttribute('data-diaDiem'),
+                giaTheoGio: button.getAttribute('data-giaTheoGio'),
+                trangThai: button.getAttribute('data-trangThai'),
+            };
+
+            openEditModal(sanBongData);
+        });
+    });
+
+    closeModalButton.addEventListener('click', () => {
+        editModal.close();
+    });
+
+    const rowsPerPage = 5;
+
+    function displayTablePage(page) {
+        tableBody.innerHTML = "";
+
+        const startIndex = (page - 1) * rowsPerPage;
+        const endIndex = Math.min(startIndex + rowsPerPage, data.length);
+
+        for (let i = startIndex; i < endIndex; i++) {
+            tableBody.appendChild(data[i]);
+        }
+
+        displayPagination(page);
+    }
+
+    function displayPagination(currentPage) {
+        pagination.innerHTML = "";
+
+        const totalPages = Math.ceil(data.length / rowsPerPage);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const button = document.createElement("button");
+            button.innerText = i;
+            button.classList.add("pagination-btn");
+            if (i === currentPage) button.classList.add("active");
+
+            button.addEventListener("click", () => displayTablePage(i));
+            pagination.appendChild(button);
+        }
+    }
+    displayTablePage(1);
+
+    searchBox.addEventListener('input', function () {
+        const searchTerm = searchBox.value.toLowerCase();
+        const rows = tableBody.getElementsByTagName('tr');
+
+        Array.from(rows).forEach(row => {
+            const nameCell = row.cells[1];
+            const name = nameCell.textContent.toLowerCase();
+
+            if (name.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>

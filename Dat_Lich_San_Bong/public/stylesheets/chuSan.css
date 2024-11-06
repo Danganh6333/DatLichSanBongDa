@@ -185,6 +185,16 @@ h2 {
     grid-column: 2 / 3;
 }
 
+.table h2{
+ margin-bottom: 6px;
+}
+.table-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 10px;
+}
 .fl-table {
     border-radius: 5px;
     font-size: 12px;
@@ -233,10 +243,20 @@ h2 {
     color: #1a1a1a;
 }
 
-
+.fl-table .controls{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
 /* Responsive */
-
-@media (max-width: 767px) {
+@media (max-width: 865px) {
+    .post{
+        grid-column: 1;
+        width: 100%;
+    } 
+    .table{
+        grid-column: 1;
+        width: 100%;
+    }
     .fl-table {
         display: block;
         width: 100%;
@@ -408,38 +428,52 @@ h2 {
 
 
 /*Check-box Styling*/
-.post .status-box .status-option {
+
+/* Container styling */
+.status-box {
     display: flex;
+    align-items: center;
+    gap: 20px; /* Space between label and options */
+    margin: 12px 0;
+    padding: 8px 12px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
 }
 
-.post .status-box label{
+/* Main label for Trạng Thái */
+.status-label {
+    font-weight: bold;
+    color: var(--text-clr);
+    margin-right: 20px;
+}
+
+/* Options styling */
+.status-option {
+    display: flex;
+    gap: 30px;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.status input[type="radio"] {
+    cursor: pointer;
+    accent-color: #00B4CC;
+}
+
+.status label {
+    cursor: pointer;
     color: var(--text-clr);
 }
 
-.post .status-box :where(.status-option, .status) {
-    display: flex;
-    align-items: center;
-    column-gap: 50px;
+.status:hover input[type="radio"] {
+    transform: scale(1.1);
 }
 
-.post .status-box {
-    column-gap: 5px;
-    cursor: pointer;
-    position: relative;
-}
-
-.post .status-box {
-    margin-bottom: 8px;
-}
-
-.post .status {
-    column-gap: 5px;
-    cursor: pointer;
-}
-
-.post :where(.status input, .status label) {
-    cursor: pointer;
-}
 
 /* Modal styling */
 ::backdrop {
@@ -476,7 +510,6 @@ dialog .controls {
 dialog .controls button {
     padding: 0.75;
     cursor: pointer;
-
     border-radius: 5px;
     background: var(--accent-clr);
     color: #ffffff;
@@ -513,3 +546,115 @@ dialog .controls button .close-btn {
 .pagination-btn:hover {
     background-color: #3a577a;
 }
+
+/* Search Container */
+.search {
+    display: flex;
+    align-items: center;
+}
+
+#searchForm {
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Search Input */
+.searchTerm {
+    width: 250px;         /* Adjust the width to your preference */
+    padding: 6px 10px;    /* Reduced padding for a smaller input box */
+    border: none;
+    outline: none;
+    font-size: 14px;      /* Slightly smaller font size */
+    color: #333;
+    background-color: #f5f5f5;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.searchTerm::placeholder {
+    color: #aaa;
+}
+
+.searchTerm:focus {
+    background-color: #fff;
+    box-shadow: 0 0 0 2px #00B4CC;
+}
+
+/* Search Button */
+.searchButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    height: 32px; 
+    background-color: var(--accent-clr);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.searchButton:hover {
+    background-color: #0088a9;
+}
+
+.searchButton i {
+    font-size: 14px;
+}
+
+
+/* Container styling */
+.status-box {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 12px 0;
+    padding: 10px 14px;
+    background-color: var(--line-clr);
+    border-radius: 6px;
+}
+
+
+.status-box .status-label {
+    font-weight: bold;
+    color: var(--text-clr); 
+    margin-right: 18px;
+}
+
+.status-option {
+    display: flex;
+    gap: 24px;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.status input[type="radio"] {
+    cursor: pointer;
+    accent-color: var(--accent-clr);
+}
+
+.status label {
+    cursor: pointer;
+    color: var(--secondary-text-clr); 
+    transition: color 0.3s ease;
+}
+
+.status label:hover {
+    color: var(--text-clr);
+}
+
+/* Hover effect for radio buttons */
+.status:hover input[type="radio"] {
+    transform: scale(1.1);
+}
+
+
+
