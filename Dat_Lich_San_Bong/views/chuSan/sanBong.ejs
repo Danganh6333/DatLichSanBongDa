@@ -2,16 +2,13 @@
     <h3>Thêm Sân Bóng</h3>
     <form id="sanBongForm" class="form" action="sanBong/themSanBong" method="post">
         <div class="input-box">
-            <label>Tên Sân Bóng</label>
             <input type="text" placeholder="Mời Nhập Tên Sân Bóng" id="" name="tenSan" required>
         </div>
         <div class="input-box">
-            <label>Địa Điểm</label>
             <input type="text" placeholder="Mời Nhập Địa Điểm" id="" name="diaDiem" required>
         </div>
         <div class="input-box">
-            <label>Giá Theo Giờ</label>
-            <input type="text" placeholder="Mời Nhập Giá" id="" name="giaTheoGio" min="0" max="2000000" required>
+            <input type="number" placeholder="Mời Nhập Giá" id="" name="giaTheoGio" min="0" max="2000000" required>
         </div>
         <div class="status-box">
             <label class="status-label">Trạng Thái</label>
@@ -78,7 +75,7 @@
                                 <i class="fas fa-edit"></i>
                             </button>
                             <form action="sanBong/xoaSanBong/<%= sanBong._id %>?_method=DELETE" method="post">
-                                <button class="icon-btn" type="submit">
+                                <button type="submit" class="icon-btn">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </form>
@@ -95,15 +92,12 @@
     <form id="editForm" method="post">
         <input type="hidden" name="_id" id="edit-id">
         <div class="input-box">
-            <label>Tên Sân Bóng</label>
             <input type="text" placeholder="Mời Nhập Tên Sân Bóng" id="edit-tenSan" name="tenSan" required value="">
         </div>
         <div class="input-box">
-            <label>Địa Điểm</label>
             <input type="text" placeholder="Mời Nhập Địa Điểm" id="edit-diaDiem" name="diaDiem" required value="">
         </div>
         <div class="input-box">
-            <label>Giá Theo Giờ</label>
             <input type="text" placeholder="Mời Nhập Giá" id="edit-giaTheoGio" name="giaTheoGio" min="0" max="2000000"
                 required value="">
         </div>

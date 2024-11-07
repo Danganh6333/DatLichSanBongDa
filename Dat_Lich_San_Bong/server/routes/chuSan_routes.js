@@ -5,7 +5,7 @@ const { getListUsers  } = require("../controller/nguoiDung_controller");
 const { getListFields,addField,deleteField,updateField } = require("../controller/sanBong_controller");
 const { getListShifts } = require("../controller/caLamViec_controller");
 const { getListServices } = require("../controller/dichVu_controller");
-const { getListProducts } = require("../controller/sanPham_controller");
+const { getListProducts,addProduct,deleteProduct,updateProduct } = require("../controller/sanPham_controller");
 
 const chuSanLayout = "../views/layouts/chuSan";
 
@@ -14,33 +14,96 @@ const chuSanLayout = "../views/layouts/chuSan";
  * /nguoiDung
  */
 router.get("/chuSan/nguoiDung", authenticate, authorize("admin"), getListUsers);
-
+//TODO 
 /**
- * Get
+ * GET
  * /sanBong
  */
 router.get("/chuSan/sanBong", authenticate, authorize("admin"), getListFields);
+/**
+ * POST
+ * /sanBong
+ */
 router.post("/chuSan/sanBong/themSanBong", authenticate, authorize("admin"),addField)
+/**
+ * DELETE
+ * /sanBong
+ */
 router.delete("/chuSan/sanBong/xoaSanBong/:id", authenticate, authorize("admin"),deleteField)
+/**
+ * PUT
+ * /sanBong
+ */
 router.put("/chuSan/sanBong/suaSanBong/:id", authenticate, authorize("admin"),updateField)
 
+//TODO 
+/**
+ * Get
+ * /nuocUong
+ */
+router.get("/chuSan/nuocUong",authenticate,authorize("admin"),getListProducts);
+/**
+ * POST
+ * /nuocUong
+ */
+router.post("/chuSan/nuocUong/themNuocUong",authenticate,authorize("admin"),addProduct);
+/**
+ * DELETE
+ * /nuocUong
+ */
+router.delete("/chuSan/nuocUong/xoaNuocUong",authenticate,authorize("admin"),deleteProduct);
+/**
+ * PUT
+ * /nuocUong
+ */
+router.put("/chuSan/nuocUong/suaNuocUong",authenticate,authorize("admin"),updateProduct);
+
+//TODO
+/**
+ * Get
+ * /doThue
+ */
+router.get("/chuSan/doThue", authenticate, authorize("admin"), getListServices);
+/**
+ * POST
+ * /doThue
+ */
+router.post("/chuSan/doThue/themDoThue", authenticate, authorize("admin"), getListServices);
+/**
+ * Get
+ * /doThue
+ */
+router.delete("/chuSan/doThue/xoaDoThue", authenticate, authorize("admin"), getListServices);
+/**
+ * Get
+ * /doThue
+ */
+router.put("/chuSan/doThue", authenticate, authorize("admin"), getListServices);
+
+//TODO
+/**
+ * Get
+ * /ca
+ */
+router.get("/chuSan/ca", authenticate, authorize("admin"), getListShifts);
+/**
+ * Get
+ * /ca
+ */
+router.get("/chuSan/ca", authenticate, authorize("admin"), getListShifts);
+/**
+ * Get
+ * /ca
+ */
+router.get("/chuSan/ca", authenticate, authorize("admin"), getListShifts);
 /**
  * Get
  * /ca
  */
 router.get("/chuSan/ca", authenticate, authorize("admin"), getListShifts);
 
-/**
- * Get
- * /doThue
- */
-router.get("/chuSan/doThue", authenticate, authorize("admin"), getListServices);
 
-/**
- * Get
- * /nuocUong
- */
-router.get("/chuSan/nuocUong",authenticate,authorize("admin"),getListProducts);
+
 
 
 router.get(

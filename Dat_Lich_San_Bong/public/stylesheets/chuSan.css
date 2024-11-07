@@ -224,8 +224,6 @@ h2 {
     color: #ffffff;
     background: var(--accent-clr);
 }
-
-
 .fl-table thead th:nth-child(odd) {
     color: #ffffff;
     background: #324960;
@@ -247,6 +245,7 @@ h2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
+
 /* Responsive */
 @media (max-width: 865px) {
     .post{
@@ -348,6 +347,7 @@ h2 {
 .icon-btn:hover {
     background-color: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
+    width: 100%;
 }
 
 .icon-btn i {
@@ -394,7 +394,7 @@ h2 {
     color: #333;
 }
 
-.post .input-box input {
+.post .input-box input  {
     position: relative;
     height: 50px;
     width: 100%;
@@ -406,6 +406,26 @@ h2 {
     border-radius: 6px;
     padding: 0 15px;
 }
+
+.input-box textarea {
+    margin-top: 8px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: #707070;
+    font-size: 14px;
+    font: 1rem;
+    width: 100%;
+    resize: none;
+}
+
+/* Container for input box */
+.input-box {
+    display: flex;
+    flex-direction: column;
+}
+
+
 
 .post .submit-btn {
     width: 100%;
@@ -425,20 +445,46 @@ h2 {
     background-color: var(--accent-clr);
 }
 
-
-
-/*Check-box Styling*/
-
-/* Container styling */
-.status-box {
+/*Image Container Styling*/
+.image-container {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 20px; /* Space between label and options */
-    margin: 12px 0;
-    padding: 8px 12px;
-    background-color: #f9f9f9;
+    color: #707070;
+    background-color: var(--line-clr);
     border-radius: 6px;
 }
+
+#file-chosen {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid var(--line-clr);
+    color: var(--text-clr);
+    font-size: 0.9rem;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+.imageButton {
+    position: absolute; 
+    right:0px; 
+    top: 56%; 
+    transform: translateY(-50%); 
+    background-color: var(--accent-clr);
+    border: none;
+    color: #fff;
+    padding: 6px 17px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1rem;
+    height: calc(100% - 8px); 
+    transition: background-color 0.3s;
+}
+
+.imageButton:hover {
+    background-color: var(--hover-clr);
+}
+
 
 /* Main label for Trạng Thái */
 .status-label {
@@ -563,11 +609,11 @@ dialog .controls button .close-btn {
 
 /* Search Input */
 .searchTerm {
-    width: 250px;         /* Adjust the width to your preference */
-    padding: 6px 10px;    /* Reduced padding for a smaller input box */
+    width: 250px;         
+    padding: 6px 10px;  
     border: none;
     outline: none;
-    font-size: 14px;      /* Slightly smaller font size */
+    font-size: 14px;     
     color: #333;
     background-color: #f5f5f5;
     transition: background-color 0.3s, box-shadow 0.3s;

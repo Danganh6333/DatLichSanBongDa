@@ -1,39 +1,104 @@
+<section class="post">
+    <h3>Thêm Nước Uống</h3>
+    <form id="sanBongForm" class="form" action="sanBong/themSanBong" method="post">
+        <div class="input-box">
+            <input type="text" placeholder="Mời Nhập Tên Nước Uống" id="" name="tenSanPham" required>
+        </div>
+        <div class="input-box">
+            <input type="number" placeholder="Mời Nhập Giá" id="" name="giaSanPham" min="0" max="2000000" required>
+        </div>
+        <div class="input-box">
+            <input type="number" placeholder="Mời Nhập Hàng Tồn Kho" id="" name="hangTonKho" required>
+        </div>
+        <div class="input-box">
+            <div class="image-container">
+                <input type="file" accept="image/jpg" id="fileInput" name="anhSanPham" style="display:none" />
+                <input type="text" id="file-chosen" placeholder="Chọn Ảnh Sản Phẩm" readonly />
+                <button type="button" class="imageButton" onclick="triggerFileInput()">
+                    <i class="fa-regular fa-image"></i>
+                </button>
+            </div>
+        </div>
+        <div class="input-box">
+            <textarea placeholder="Mời Nhập Mô Tả Sản Phẩm" id="" name="moTaSanPham" rows="4" required></textarea>
+        </div>
+
+        <input type="submit" value="Thêm Nước Uống" class="submit-btn">
+    </form>
+</section>
 <section class="table">
+    <div class="table-header">
+        <h2 class="header">Danh Sách Sân Bóng</h2>
+        <div class="search">
+            <form id="searchForm">
+                <input type="text" id="searchBox" class="searchTerm" placeholder="Tìm kiếm theo tên nước uống..." />
+                <button type="submit" class="searchButton">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
     <table class="fl-table">
         <thead>
             <tr>
                 <th>STT</th>
-                <th>Tên Sản Phẩm</th>
-                <th>Mô Tả Sản Phẩm</th>
-                <th>Ảnh Sản Phẩm</th>
-                <th>Giá Sản Phẩm</th>
+                <th>Tên</th>
+                <th>Giá</th>
+                <th>Ảnh</th>
                 <th>Hàng Tồn Kho</th>
+                <th>Mô Tả </th>
+                <th>Thao Tác</th>
             </tr>
-        </thead>
-        <tbody>
-            <% data.forEach((nguoiDung, index) => { %>
+        <tbody id="nuocUongTable">
+            <% data.forEach((sanBong, index)=> { %>
                 <tr>
-                    <td><%= index + 1 %></td> 
-                    <td><%= nguoiDung.tenSanPham %></td> 
-                    <td><%= nguoiDung.moTaSanPham %></td> 
-                    <td><%= nguoiDung.anhSanPham %></td> 
-                    <td><%= nguoiDung.giaSanPham  %></td> 
-                    <td><%= nguoiDung.hangTonKho  %></td> 
                     <td>
-                        <button onclick="editUser('<%= nguoiDung._id %>')">Edit</button>
-                        <button onclick="deleteUser('<%= nguoiDung._id %>')">Delete</button>
+                        <%= index + 1 %>
+                    </td>
+                    <td>
+                        <%= sanBong.tenSan %>
+                    </td>
+                    <td>
+                        <%= sanBong.diaDiem %>
+                    </td>
+                    <td>
+                        <%= sanBong.giaTheoGio %>
+                    </td>
+                    <td>
+                        <%= sanBong.trangThai %>
+                    </td>
+                    <td>
+                        <div class="controls">
+                            <button class="icon-btn open-popup" data-id="<%= sanBong._id %>"
+                                data-tenSan="<%= sanBong.tenSan %>" data-diaDiem="<%= sanBong.diaDiem %>"
+                                data-giaTheoGio="<%= sanBong.giaTheoGio %>" data-trangThai="<%= sanBong.trangThai %>">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <form action="sanBong/xoaSanBong/<%= sanBong._id %>?_method=DELETE" method="post">
+                                <button type="submit" class="icon-btn">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
-            <% }) %>
+                <% }) %>
         </tbody>
+        </thead>
     </table>
+    <div id="pagination" class="pagination-controls"></div>
 </section>
 <script type="text/javascript">
-      function toggleSidebar() {
+
+
+    function toggleSidebar() {
         const sidebar = document.getElementById("sidebar");
         sidebar.classList.toggle("close");
         const icon = document.querySelector("#toggle-btn i");
         icon.classList.toggle("fa-angle-double-left");
         icon.classList.toggle("fa-angle-double-right");
     }
+
+
+
 </script>
