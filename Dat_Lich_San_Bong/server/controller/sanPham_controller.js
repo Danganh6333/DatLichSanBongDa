@@ -12,9 +12,7 @@ exports.getListProducts = async (req, res, next) => {
       userName: req.user.hoTen,
       currentRoute: `/nuocUong`,
     };
-    const data = await SanPhamModel.find()
-      .populate("id_TheLoai")
-      .sort({ createdAt: -1 });
+    const data = await SanPhamModel.find().sort({ createdAt: -1 });
     res.render("chuSan/nuocUong", { locals, layout: chuSanLayout, data });
   } catch (error) {
     console.log(error);
@@ -24,7 +22,7 @@ exports.getListProducts = async (req, res, next) => {
 exports.addProduct = async (req, res, next) => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    const { tenSanPham, moTaSanPham, gia, hangTonKho } = req.body;
+    const { tenSanPham, moTaSanPham, giaSanPham, hangTonKho } = req.body;
     let anhSanPham = null;
     if (req.file) {
       anhSanPham = `${req.protocol}://localhost:3000/uploads/${req.file.filename}`;
@@ -33,12 +31,12 @@ exports.addProduct = async (req, res, next) => {
       tenSanPham,
       moTaSanPham,
       anhSanPham,
-      gia,
+      giaSanPham,
       hangTonKho,
     });
 
-    const savedSanPham = await newSanPham.save();
-    res.status(201).json(savedSanPham);
+    await newSanPham.save();
+    res.redirect("/chuSan/nuocUong");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi thêm sản phẩm" });
@@ -53,26 +51,27 @@ exports.updateProduct = async (req, res, next) => {
     if (!mongoose.Types.ObjectId.isValid(id_SanPham)) {
       return res.status(400).json({ message: "ID không hợp lệ!" });
     }
+    const { tenSanPham, moTaSanPham, giaSanPham, hangTonKho } = req.body;
+    const capNhatAnh = await SanPhamModel.findById(id_SanPham);
+    let anhSanPham = capNhatAnh.anhSanPham;
 
-    const { tenSanPham, moTaSanPham, gia, hangTonKho } = req.body;
-    let anhSanPham = null;
     if (req.file) {
       anhSanPham = `${req.protocol}://localhost:3000/uploads/${req.file.filename}`;
     }
-    const updatedSanPham = await SanPhamModel.findByIdAndUpdate(
+    await SanPhamModel.findByIdAndUpdate(
       id_SanPham,
       {
         tenSanPham,
         moTaSanPham,
         anhSanPham,
-        gia,
+        giaSanPham,
         hangTonKho,
       },
       {
         new: true,
       }
     );
-    res.status(200).json(updatedSanPham);
+    res.redirect("/chuSan/nuocUong");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi cập nhật sản phẩm" });
@@ -88,8 +87,8 @@ exports.deleteProduct = async (req, res, next) => {
       return res.status(400).json({ message: "ID không hợp lệ!" });
     }
 
-    const deletedSanPham = await SanPhamModel.findByIdAndDelete(id_SanPham);
-    res.status(200).json(deletedSanPham);
+    await SanPhamModel.findByIdAndDelete(id_SanPham);
+    res.redirect("/chuSan/nuocUong");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi lấy xóa sản phẩm" });

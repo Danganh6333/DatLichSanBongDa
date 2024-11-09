@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const Upload = require("../config/upload");
 const { authenticate, authorize } = require("../middleware/authMiddleware");
 const { getListUsers  } = require("../controller/nguoiDung_controller");
 const { getListFields,addField,deleteField,updateField } = require("../controller/sanBong_controller");
-const { getListShifts } = require("../controller/caLamViec_controller");
-const { getListServices } = require("../controller/dichVu_controller");
+const { getListShifts,addShift,updateShift,deleteShift } = require("../controller/caLamViec_controller");
+const { getListServices,addService,deleteService,updateService } = require("../controller/dichVu_controller");
 const { getListProducts,addProduct,deleteProduct,updateProduct } = require("../controller/sanPham_controller");
 
 const chuSanLayout = "../views/layouts/chuSan";
@@ -46,17 +47,17 @@ router.get("/chuSan/nuocUong",authenticate,authorize("admin"),getListProducts);
  * POST
  * /nuocUong
  */
-router.post("/chuSan/nuocUong/themNuocUong",authenticate,authorize("admin"),addProduct);
+router.post("/chuSan/nuocUong/themNuocUong",authenticate,authorize("admin"),Upload.single("anhSanPham"),addProduct);
 /**
  * DELETE
  * /nuocUong
  */
-router.delete("/chuSan/nuocUong/xoaNuocUong",authenticate,authorize("admin"),deleteProduct);
+router.delete("/chuSan/nuocUong/xoaNuocUong/:id",authenticate,authorize("admin"),deleteProduct);
 /**
  * PUT
  * /nuocUong
  */
-router.put("/chuSan/nuocUong/suaNuocUong",authenticate,authorize("admin"),updateProduct);
+router.put("/chuSan/nuocUong/suaNuocUong/:id",authenticate,authorize("admin"),Upload.single("anhSanPham"),updateProduct);
 
 //TODO
 /**
@@ -68,41 +69,39 @@ router.get("/chuSan/doThue", authenticate, authorize("admin"), getListServices);
  * POST
  * /doThue
  */
-router.post("/chuSan/doThue/themDoThue", authenticate, authorize("admin"), getListServices);
+router.post("/chuSan/doThue/themDoThue", authenticate, authorize("admin"),Upload.single("anhDichVu"), addService);
 /**
- * Get
+ * DELETE
  * /doThue
  */
-router.delete("/chuSan/doThue/xoaDoThue", authenticate, authorize("admin"), getListServices);
+router.delete("/chuSan/doThue/xoaDoThue/:id", authenticate, authorize("admin"), deleteService);
 /**
- * Get
+ * PUT
  * /doThue
  */
-router.put("/chuSan/doThue", authenticate, authorize("admin"), getListServices);
+router.put("/chuSan/doThue/suaDoThue/:id", authenticate, authorize("admin"),Upload.single("anhDichVu"), updateService);
 
 //TODO
 /**
  * Get
  * /ca
  */
-router.get("/chuSan/ca", authenticate, authorize("admin"), getListShifts);
+router.get("/chuSan/caLamViec", authenticate, authorize("admin"), getListShifts);
 /**
- * Get
+ * POST
  * /ca
  */
-router.get("/chuSan/ca", authenticate, authorize("admin"), getListShifts);
+router.post("/chuSan/caLamViec/themCaLamViec", authenticate, authorize("admin"), addShift);
 /**
- * Get
+ * DELETE
  * /ca
  */
-router.get("/chuSan/ca", authenticate, authorize("admin"), getListShifts);
+router.delete("/chuSan/caLamViec/xoaCaLamViec", authenticate, authorize("admin"), deleteShift);
 /**
- * Get
+ * PUT
  * /ca
  */
-router.get("/chuSan/ca", authenticate, authorize("admin"), getListShifts);
-
-
+router.get("/chuSan/caLamViec/suaCaLamViec", authenticate, authorize("admin"), getListShifts);
 
 
 
@@ -142,6 +141,27 @@ router.get(
       };
 
       res.render("chuSan/thongKe", { locals, layout: chuSanLayout });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+router.get(
+  "/chuSan/thamSo",
+  authenticate,
+  authorize("admin"),
+  async (req, res) => {
+    try {
+      const locals = {
+        title: "Trang Chủ",
+        description:
+          "Website đặt sân bóng dễ dàng và nhanh chóng, cung cấp dịch vụ đặt lịch, thanh toán trực tuyến, và hỗ trợ quản lý sân cho chủ sở hữu.",
+        userName: req.user.hoTen,
+        currentRoute: `/thamSo`,
+      };
+
+      res.render("chuSan/thamSo", { locals, layout: chuSanLayout });
     } catch (error) {
       console.log(error);
     }

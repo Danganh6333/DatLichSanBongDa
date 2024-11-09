@@ -22,7 +22,7 @@ exports.getListServices = async (req, res, next) => {
 exports.addService = async (req, res, next) => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    const { tenDichVu, giaDichVu } = req.body;
+    const { tenDichVu, giaDichVu,soLuong } = req.body;
     let anhDichVu = null;
     if (req.file) {
       anhDichVu = `${req.protocol}://localhost:3000/uploads/${req.file.filename}`;
@@ -31,9 +31,10 @@ exports.addService = async (req, res, next) => {
       tenDichVu,
       anhDichVu,
       giaDichVu,
+      soLuong
     });
-    const savedDichVu = await newDichVu.save();
-    res.status(201).json(savedDichVu);
+    await newDichVu.save();
+    res.redirect("/chuSan/doThue");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi thêm dịch vụ" });
@@ -44,7 +45,7 @@ exports.updateService = async (req, res, next) => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
 
-    const { tenDichVu, giaDichVu } = req.body;
+    const { tenDichVu,trangThai,soLuong, giaDichVu } = req.body;
 
     const id_DichVu = req.params.id;
 
@@ -52,16 +53,18 @@ exports.updateService = async (req, res, next) => {
       return res.status(400).json({ message: "ID không hợp lệ!" });
     }
 
-    let anhDichVu = null;
+    const capNhatAnh = await DichVuModel.findById(id_DichVu);
+    let anhDichVu = capNhatAnh.anhDichVu;
+
     if (req.file) {
       anhDichVu = `${req.protocol}://localhost:3000/uploads/${req.file.filename}`;
     }
-    const updatedDichVu = await DichVuModel.findByIdAndUpdate(
+    await DichVuModel.findByIdAndUpdate(
       id_DichVu,
-      { tenDichVu, anhDichVu, giaDichVu },
+      { tenDichVu, anhDichVu, giaDichVu,trangThai,soLuong },
       { new: true }
     );
-    res.status(200).json(updatedDichVu);
+    res.redirect("/chuSan/doThue");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi cập nhật dịch vụ" });
@@ -77,8 +80,8 @@ exports.deleteService = async (req, res, next) => {
       return res.status(400).json({ message: "ID không hợp lệ!" });
     }
 
-    const deletedDichVu = await DichVuModel.findByIdAndDelete(id_DichVu);
-    res.status(200).json(deletedDichVu);
+    await DichVuModel.findByIdAndDelete(id_DichVu);
+    res.redirect("/chuSan/doThue");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi xóa dịch vụ" });

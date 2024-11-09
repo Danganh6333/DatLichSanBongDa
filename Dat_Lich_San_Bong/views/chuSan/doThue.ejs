@@ -1,4 +1,40 @@
+<section class="post">
+    <h3>Thêm Đồ Thuê</h3>
+    <form id="nuocUongForm" class="form" action="doThue/themDoThue" method="post" enctype="multipart/form-data">
+        <div class="input-box">
+            <input type="text" placeholder="Mời Nhập Tên Sản Phẩm" id="" name="tenDichVu" required>
+        </div>
+        <div class="input-box">
+            <input type="number" placeholder="Mời Nhập Giá Thuê" id="" name="giaDichVu" min="0" max="2000000" required>
+        </div>
+        <div class="input-box">
+            <input type="number" placeholder="Mời Nhập Số Lượng" id="" name="soLuong" min="0" max="2000000" required>
+        </div>
+        <div class="input-box">
+            <div class="image-container">
+                <input type="file" accept="image/png, image/jpeg, image/jpg" id="fileInput" name="anhDichVu"
+                    style="display:none" />
+                <input type="text" id="file-chosen" placeholder="Chọn Ảnh" readonly />
+                <button type="button" class="imageButton" onclick="triggerFileInput()">
+                    <i class="fa-regular fa-image"></i>
+                </button>
+            </div>
+        </div>
+        <input type="submit" value="Thêm Đồ Thuê" class="submit-btn">
+    </form>
+</section>
 <section class="table">
+    <div class="table-header">
+        <h2 class="header">Danh Sách Đồ Thuê</h2>
+        <div class="search">
+            <form id="searchForm">
+                <input type="text" id="searchBox" class="searchTerm" placeholder="Tìm kiếm theo tên sân bóng..." />
+                <button type="submit" class="searchButton">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
     <table class="fl-table">
         <thead>
             <tr>
@@ -11,24 +47,207 @@
                 <th>Thao Tác</th>
             </tr>
         </thead>
-        <tbody>
-            <% data.forEach((nguoiDung, index) => { %>
+        <tbody id="doThueTable">
+            <% data.forEach((doThue, index)=> { %>
                 <tr>
-                    <td><%= index + 1 %></td> 
-                    <td><%= nguoiDung.tenDichVu %></td> 
-                    <td><%= nguoiDung.AnhDichVu %></td> 
-                    <td><%= nguoiDung.giaDichVu %></td> 
-                    <td><%= nguoiDung.trangThai %></td> 
-                    <td><%= nguoiDung.soLuong %></td> 
                     <td>
-                        <button onclick="">Edit</button>
-                        <button onclick="">Delete</button>
+                        <%= index + 1 %>
+                    </td>
+                    <td>
+                        <%= doThue.tenDichVu %>
+                    </td>
+                    <td>
+                        <img src=" <%= doThue.anhDichVu %>" width="70" alt="" srcset="">
+                    </td>
+                    <td>
+                        <%= doThue.giaDichVu %>
+                    </td>
+                    <td>
+                        <%= doThue.trangThai %>
+                    </td>
+                    <td>
+                        <%= doThue.soLuong %>
+                    </td>
+                    <td>
+                        <div class="controls">
+                            <button class="icon-btn open-popup" data-id='<%= doThue._id %>'
+                                data-tenDichVu='<%= doThue.tenDichVu %>' data-anhDichVu='<%= doThue.anhDichVu %>'
+                                data-giaDichVu='<%= doThue.giaDichVu %>' data-trangThai='<%= doThue.trangThai %>'
+                                data-soLuong='<%= doThue.soLuong %>'>
+                                <i class="fas fa-edit"></i>
+                            </button>
+
+                            <form action="doThue/xoaDoThue/<%= doThue._id %>?_method=DELETE" method="post">
+                                <button type="submit" class="icon-btn">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
                     </td>
                 </tr>
-            <% }) %>
+                <% }) %>
         </tbody>
     </table>
+    <div id="pagination" class="pagination-controls"></div>
 </section>
+<dialog id="editModal" close>
+    <h2>Chỉnh Sửa Nước Uống</h2>
+    <form id="editForm" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_id" id="edit-id">
+        <div class="input-box">
+            <input type="text" placeholder="Mời Nhập Tên Nước Uống" id="edit-DichVu" name="tenDichVu" required value="">
+        </div>
+        <div class="input-box">
+            <input type="text" placeholder="Mời Nhập Giá" id="edit-giaDichVu" name="giaDichVu" required value="">
+        </div>
+        <div class="input-box">
+            <input type="text" placeholder="Mời Nhập Số Lượng" id="edit-soLuong" name="soLuong" min="0" max="2000000"
+                required value="">
+        </div>
+        <div class="input-box">
+            <div class="image-container">
+                <input type="file" accept="image/png, image/jpeg, image/jpg" id="editFileInput" name="anhDichVu"
+                    style="display:none" />
+                <input type="text" id="edit-file-chosen" placeholder="Chọn Ảnh Sản Phẩm" readonly />
+                <button type="button" class="imageButton" onclick="triggerFileInput(true)">
+                    <i class="fa-regular fa-image"></i>
+                </button>
+            </div>
+        </div>
+        <div class="status-box">
+            <label>Trạng Thái</label>
+            <div class="status-option">
+                <div class="status">
+                    <input type="radio" name="trangThai" value="Đang Kinh Doanh" id="edit-check-in-use">
+                    <label for="edit-check-in-use">Đang Kinh Doanh</label>
+                </div>
+                <div class="status">
+                    <input type="radio" name="trangThai" value="Dừng Kinh Doanh" id="edit-check-maintainance">
+                    <label for="edit-check-maintainance">Dừng Kinh Doanh</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button type="button" class="close-btn">Đóng</button>
+            <button type="submit">Lưu</button>
+        </div>
+    </form>
+</dialog>
 <script type="text/javascript">
-    
+    const tableBody = document.getElementById("doThueTable");
+    const pagination = document.getElementById("pagination");
+    const data = Array.from(tableBody.querySelectorAll("tr"));
+    const dialog = document.querySelector("dialog");
+    const openPopupButtons = document.querySelectorAll(".open-popup");
+    const editButtons = document.querySelectorAll('.open-popup');
+    const editModal = document.getElementById('editModal');
+    const closeModalButton = document.querySelector('.close-btn');
+    const searchBox = document.getElementById('searchBox');
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.classList.toggle("close");
+        const icon = document.querySelector("#toggle-btn i");
+        icon.classList.toggle("fa-angle-double-left");
+        icon.classList.toggle("fa-angle-double-right");
+    }
+
+    function triggerFileInput(isEdit = false) {
+        const fileInput = isEdit ? document.getElementById("editFileInput") : document.getElementById("fileInput");
+        fileInput.click();
+    }
+
+    function openEditModal(doThue) {
+        document.getElementById('editForm').action = `doThue/suaDoThue/${doThue._id}?_method=PUT`;
+        document.getElementById('edit-id').value = doThue._id;
+        document.getElementById('edit-DichVu').value = doThue.tenDichVu;
+        document.getElementById('edit-giaDichVu').value = doThue.giaDichVu;
+        document.getElementById('edit-soLuong').value = doThue.soLuong;
+        document.getElementById('edit-file-chosen').value = doThue.anhDichVu;
+
+        const statusRadios = document.getElementsByName('trangThai');
+        statusRadios.forEach(radio => {
+            radio.checked = radio.value === doThue.trangThai;
+        });
+
+        editModal.showModal();
+    }
+
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const doThueData = {
+                _id: button.getAttribute('data-id'),
+                tenDichVu: button.getAttribute('data-tenDichVu'),
+                anhDichVu: button.getAttribute('data-anhDichVu'),
+                giaDichVu: button.getAttribute('data-giaDichVu'),
+                trangThai: button.getAttribute('data-trangThai'),
+                soLuong: button.getAttribute('data-soLuong'),
+            };
+            openEditModal(doThueData);
+        });
+    });
+
+    document.getElementById("editFileInput").addEventListener("change", function () {
+        const fileName = this.files[0] ? this.files[0].name : "";
+        document.getElementById("edit-file-chosen").value = fileName;
+    });
+
+    closeModalButton.addEventListener('click', () => {
+        editModal.close();
+    });
+
+
+    document.getElementById("fileInput").addEventListener("change", function () {
+        const fileName = this.files[0] ? this.files[0].name : "";
+        document.getElementById("file-chosen").value = fileName;
+    });
+
+    function displayTablePage(page) {
+        tableBody.innerHTML = "";
+
+        const startIndex = (page - 1) * rowsPerPage;
+        const endIndex = Math.min(startIndex + rowsPerPage, data.length);
+
+        for (let i = startIndex; i < endIndex; i++) {
+            tableBody.appendChild(data[i]);
+        }
+
+        displayPagination(page);
+    }
+
+    const rowsPerPage = 5;
+
+    function displayPagination(currentPage) {
+        pagination.innerHTML = "";
+
+        const totalPages = Math.ceil(data.length / rowsPerPage);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const button = document.createElement("button");
+            button.innerText = i;
+            button.classList.add("pagination-btn");
+            if (i === currentPage) button.classList.add("active");
+
+            button.addEventListener("click", () => displayTablePage(i));
+            pagination.appendChild(button);
+        }
+    }
+
+    searchBox.addEventListener('input', function () {
+        const searchTerm = searchBox.value.toLowerCase();
+        const rows = tableBody.getElementsByTagName('tr');
+
+        Array.from(rows).forEach(row => {
+            const nameCell = row.cells[1];
+            const name = nameCell.textContent.toLowerCase();
+
+            if (name.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+    displayTablePage(1);
 </script>

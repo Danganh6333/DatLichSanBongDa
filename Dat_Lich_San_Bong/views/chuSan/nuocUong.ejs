@@ -1,6 +1,6 @@
 <section class="post">
     <h3>Thêm Nước Uống</h3>
-    <form id="sanBongForm" class="form" action="sanBong/themSanBong" method="post">
+    <form id="nuocUongForm" class="form" action="nuocUong/themNuocUong" method="post" enctype="multipart/form-data">
         <div class="input-box">
             <input type="text" placeholder="Mời Nhập Tên Nước Uống" id="" name="tenSanPham" required>
         </div>
@@ -12,15 +12,16 @@
         </div>
         <div class="input-box">
             <div class="image-container">
-                <input type="file" accept="image/jpg" id="fileInput" name="anhSanPham" style="display:none" />
-                <input type="text" id="file-chosen" placeholder="Chọn Ảnh Sản Phẩm" readonly />
+                <input type="file" accept="image/png, image/jpeg, image/jpg" id="fileInput" name="anhSanPham"
+                    style="display:none" />
+                <input type="text" id="file-chosen" placeholder="Chọn Ảnh Nước Uống" readonly />
                 <button type="button" class="imageButton" onclick="triggerFileInput()">
                     <i class="fa-regular fa-image"></i>
                 </button>
             </div>
         </div>
         <div class="input-box">
-            <textarea placeholder="Mời Nhập Mô Tả Sản Phẩm" id="" name="moTaSanPham" rows="4" required></textarea>
+            <textarea placeholder="Mời Nhập Mô Tả Nước Uống" name="moTaSanPham" rows="4" required></textarea>
         </div>
 
         <input type="submit" value="Thêm Nước Uống" class="submit-btn">
@@ -28,7 +29,7 @@
 </section>
 <section class="table">
     <div class="table-header">
-        <h2 class="header">Danh Sách Sân Bóng</h2>
+        <h2 class="header">Danh Sách Nước Uống</h2>
         <div class="search">
             <form id="searchForm">
                 <input type="text" id="searchBox" class="searchTerm" placeholder="Tìm kiếm theo tên nước uống..." />
@@ -50,31 +51,36 @@
                 <th>Thao Tác</th>
             </tr>
         <tbody id="nuocUongTable">
-            <% data.forEach((sanBong, index)=> { %>
+            <% data.forEach((nuocUong, index)=> { %>
                 <tr>
                     <td>
                         <%= index + 1 %>
                     </td>
                     <td>
-                        <%= sanBong.tenSan %>
+                        <%= nuocUong.tenSanPham %>
                     </td>
                     <td>
-                        <%= sanBong.diaDiem %>
+                        <%= nuocUong.giaSanPham %>
                     </td>
                     <td>
-                        <%= sanBong.giaTheoGio %>
+                        <img src="<%= nuocUong.anhSanPham %>" width="70" alt="" srcset="">
                     </td>
                     <td>
-                        <%= sanBong.trangThai %>
+                        <%= nuocUong.hangTonKho %>
+                    </td>
+                    <td>
+                        <%= nuocUong.moTaSanPham %>
                     </td>
                     <td>
                         <div class="controls">
-                            <button class="icon-btn open-popup" data-id="<%= sanBong._id %>"
-                                data-tenSan="<%= sanBong.tenSan %>" data-diaDiem="<%= sanBong.diaDiem %>"
-                                data-giaTheoGio="<%= sanBong.giaTheoGio %>" data-trangThai="<%= sanBong.trangThai %>">
+                            <button class="icon-btn open-popup" data-id="<%= nuocUong._id %>"
+                                data-tenSanPham="<%= nuocUong.tenSanPham %>" data-giaSanPham="<%= nuocUong.giaSanPham%>"
+                                data-hangTonKho="<%= nuocUong.hangTonKho %>"
+                                data-moTaSanPham="<%= nuocUong.moTaSanPham%>"
+                                data-anhSanPham="<%= nuocUong.anhSanPham %>">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <form action="sanBong/xoaSanBong/<%= sanBong._id %>?_method=DELETE" method="post">
+                            <form action="nuocUong/xoaNuocUong/<%= nuocUong._id %>?_method=DELETE" method="post">
                                 <button type="submit" class="icon-btn">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
@@ -88,8 +94,50 @@
     </table>
     <div id="pagination" class="pagination-controls"></div>
 </section>
+<dialog id="editModal" close>
+    <h2>Chỉnh Sửa Nước Uống</h2>
+    <form id="editForm" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_id" id="edit-id">
+        <div class="input-box">
+            <input type="text" placeholder="Mời Nhập Tên Nước Uống" id="edit-tenSanPham" name="tenSanPham" required
+                value="">
+        </div>
+        <div class="input-box">
+            <input type="text" placeholder="Mời Nhập Giá" id="edit-giaSanPham" name="giaSanPham" required value="">
+        </div>
+        <div class="input-box">
+            <input type="text" placeholder="Mời Nhập Hàng Tồn Kho" id="edit-hangTonKho" name="hangTonKho" min="0"
+                max="2000000" required value="">
+        </div>
+        <div class="input-box">
+            <div class="image-container">
+                <input type="file" accept="image/png, image/jpeg, image/jpg" id="editFileInput" name="anhSanPham" style="display:none" />
+                <input type="text" id="edit-file-chosen" placeholder="Chọn Ảnh Sản Phẩm" readonly />
+                <button type="button" class="imageButton" onclick="triggerFileInput(true)">
+                    <i class="fa-regular fa-image"></i>
+                </button>
+            </div>
+        </div>
+        <div class="input-box">
+            <textarea type="text" placeholder="Mời Nhập Mô Tả Sản Phẩm" id="edit-moTaSanPham" name="moTaSanPham"
+                rows="4" required></textarea>
+        </div>
+        <div class="controls">
+            <button type="button" class="close-btn">Đóng</button>
+            <button type="submit">Lưu</button>
+        </div>
+    </form>
+</dialog>
 <script type="text/javascript">
-
+    const dialog = document.querySelector("dialog");
+    const openPopupButtons = document.querySelectorAll(".open-popup");
+    const tableBody = document.getElementById("nuocUongTable");
+    const pagination = document.getElementById("pagination");
+    const data = Array.from(tableBody.querySelectorAll("tr"));
+    const editButtons = document.querySelectorAll('.open-popup');
+    const editModal = document.getElementById('editModal');
+    const closeModalButton = document.querySelector('.close-btn');
+    const searchBox = document.getElementById('searchBox');
 
     function toggleSidebar() {
         const sidebar = document.getElementById("sidebar");
@@ -98,7 +146,103 @@
         icon.classList.toggle("fa-angle-double-left");
         icon.classList.toggle("fa-angle-double-right");
     }
+    function triggerFileInput(isEdit = false) {
+        const fileInput = isEdit ? document.getElementById("editFileInput") : document.getElementById("fileInput");
+        fileInput.click();
+    }
+
+    document.getElementById("fileInput").addEventListener("change", function () {
+        const fileName = this.files[0] ? this.files[0].name : "";
+        document.getElementById("file-chosen").value = fileName;
+    });
+
+    document.getElementById("editFileInput").addEventListener("change", function () {
+        const fileName = this.files[0] ? this.files[0].name : "";
+        document.getElementById("edit-file-chosen").value = fileName;
+    });
+
+    function displayTablePage(page) {
+        tableBody.innerHTML = "";
+
+        const startIndex = (page - 1) * rowsPerPage;
+        const endIndex = Math.min(startIndex + rowsPerPage, data.length);
+
+        for (let i = startIndex; i < endIndex; i++) {
+            tableBody.appendChild(data[i]);
+        }
+
+        displayPagination(page);
+    }
+
+    const rowsPerPage = 5;
+
+    function displayPagination(currentPage) {
+        pagination.innerHTML = "";
+
+        const totalPages = Math.ceil(data.length / rowsPerPage);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const button = document.createElement("button");
+            button.innerText = i;
+            button.classList.add("pagination-btn");
+            if (i === currentPage) button.classList.add("active");
+
+            button.addEventListener("click", () => displayTablePage(i));
+            pagination.appendChild(button);
+        }
+    }
+    displayTablePage(1);
 
 
+    function openEditModal(nuocUong) {
+    const formAction = `nuocUong/suaNuocUong/${nuocUong._id}?_method=PUT`;
+    document.getElementById('editForm').action = formAction;
+
+    document.getElementById('edit-id').value = nuocUong._id;
+    document.getElementById('edit-tenSanPham').value = nuocUong.tenSanPham;
+    document.getElementById('edit-giaSanPham').value = nuocUong.giaSanPham;
+    document.getElementById('edit-hangTonKho').value = nuocUong.hangTonKho;
+    
+    document.getElementById('edit-file-chosen').value = nuocUong.anhSanPham;
+    
+    document.getElementById('edit-moTaSanPham').value = nuocUong.moTaSanPham;
+    editModal.showModal();
+}
+
+
+
+    closeModalButton.addEventListener('click', () => {
+        editModal.close();
+    });
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const nuocUongData = {
+                _id: button.getAttribute('data-id'),
+                tenSanPham: button.getAttribute('data-tenSanPham'),
+                anhSanPham: button.getAttribute('data-anhSanPham'),
+                moTaSanPham: button.getAttribute('data-moTaSanPham'),
+                giaSanPham: button.getAttribute('data-giaSanPham'),
+                hangTonKho: button.getAttribute('data-hangTonKho'),
+            };
+            openEditModal(nuocUongData);
+        });
+    });
+
+    searchBox.addEventListener('input', function () {
+        const searchTerm = searchBox.value.toLowerCase();
+        const rows = tableBody.getElementsByTagName('tr');
+
+        Array.from(rows).forEach(row => {
+            const nameCell = row.cells[1];
+            const name = nameCell.textContent.toLowerCase();
+
+            if (name.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
 
 </script>

@@ -16,7 +16,8 @@ const DichVuSchema = new db.Schema(
     },
     trangThai:{
       type : String,
-      enum : ["Dừng Kinh Doanh","Đang Kinh Doanh"]
+      enum : ["Dừng Kinh Doanh","Đang Kinh Doanh"],
+      default:'Đang Kinh Doanh'
     },
     soLuong:{
       type : Number,
