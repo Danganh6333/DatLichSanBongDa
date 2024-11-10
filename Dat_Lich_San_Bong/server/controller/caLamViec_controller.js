@@ -10,11 +10,11 @@ exports.getListShifts = async (req, res, next) => {
       description:
         "Website đặt sân bóng dễ dàng và nhanh chóng, cung cấp dịch vụ đặt lịch, thanh toán trực tuyến, và hỗ trợ quản lý sân cho chủ sở hữu.",
       userName: req.user.hoTen,
-      currentRoute: `/ca`,
+      currentRoute: `/caLamViec`,
     };
-    const data = await CaLamViecModel.find()
+    const data = await CaLamViecModel.find();
 
-    res.render("chuSan/ca", { locals, layout: chuSanLayout,data });
+    res.render("chuSan/ca", { locals, layout: chuSanLayout, data });
   } catch (error) {
     console.log(error);
   }
@@ -24,24 +24,23 @@ exports.addShift = async (req, res, next) => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     const { tenCa, tongTien } = req.body;
-    const gioBatDau = req.body.gioBatDau.slice(0, 5); 
+    const gioBatDau = req.body.gioBatDau.slice(0, 5);
     const gioKetThuc = req.body.gioKetThuc.slice(0, 5);
 
     const newCaLamViec = new CaLamViecModel({
       tenCa,
       gioBatDau,
       gioKetThuc,
-      tongTien
+      tongTien,
     });
     await newCaLamViec.save();
 
-    res.redirect('/chuSan/caLamViec');
+    res.redirect("/chuSan/caLamViec");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi thêm ca làm việc" });
   }
 };
-
 
 exports.updateShift = async (req, res, next) => {
   try {
@@ -52,16 +51,16 @@ exports.updateShift = async (req, res, next) => {
       return res.status(400).json({ message: "ID không hợp lệ!" });
     }
 
-    const { id_NhanVien, gioBatDau, gioKetThuc, tongTien } = req.body;
+    const { tenCa, tongTien } = req.body;
+    const gioBatDau = req.body.gioBatDau.slice(0, 5);
+    const gioKetThuc = req.body.gioKetThuc.slice(0, 5);
 
-    const updatedCaLamViec = await CaLamViecModel.findByIdAndUpdate(
+    await CaLamViecModel.findByIdAndUpdate(
       id_CalamViec,
-      {
-        tongTien,
-      },
+      { tenCa, tongTien, gioBatDau, gioKetThuc },
       { new: true }
     );
-    res.status(200).json(updatedCaLamViec);
+    res.redirect("/chuSan/caLamViec");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi cập nhật ca làm việc" });
@@ -73,15 +72,13 @@ exports.deleteShift = async (req, res, next) => {
     await mongoose.connect(process.env.MONGO_URI);
     const id_CaLamViec = req.params.id;
 
-    if (!mongoose.Types.ObjectId.isValid(id_CalamViec)) {
+    if (!mongoose.Types.ObjectId.isValid(id_CaLamViec)) {
       return res.status(400).json({ message: "ID không hợp lệ!" });
     }
 
-    const deletedCaLamViec = await CaLamViecModel.findByIdAndDelete(
-      id_CaLamViec
-    );
+    await CaLamViecModel.findByIdAndDelete(id_CaLamViec);
 
-    res.status(200).json(deletedCaLamViec);
+    res.redirect("/chuSan/caLamViec");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi cập nhật xóa làm việc" });

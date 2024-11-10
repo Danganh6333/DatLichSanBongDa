@@ -1,0 +1,257 @@
+<section class="post">
+    <h3>Thêm Nhân Viên</h3>
+    <form id="nhanVienForm" class="form" action="nhanVien/themNhanVien" method="post">
+        <div class="input-box">
+            <input type="text" placeholder="Mời Nhập Họ Tên Nhân Viên" id="" name="hoTen" required>
+        </div>
+        <div class="input-box">
+            <input type="email" placeholder="Mời Nhập Email" id="" name="email" required>
+        </div>
+        <div class="input-box">
+            <input type="tel" placeholder="Mời Nhập Số Điện Thoại" id="" name="phoneNumber" required>
+        </div>
+        <div class="input-box">
+            <input type="password" placeholder="Mời Nhập Mật Khẩu" id="password" name="matKhau" required>
+            <span onclick="togglePasswordVisibility('password', 'togglePasswordIcon1')"
+                class="toggle-icon password-toggle">
+                <i id="togglePasswordIcon1" class="fa-solid fa-eye-slash"></i>
+            </span>
+        </div>
+        <div class="input-box">
+            <input type="password" placeholder="Mời Nhập Lại Mật Khẩu" id="confirmPassword" required>
+            <span onclick="togglePasswordVisibility('confirmPassword', 'togglePasswordIcon2')"
+                class="toggle-icon confirm-password-toggle">
+                <i id="togglePasswordIcon2" class="fa-solid fa-eye-slash"></i>
+            </span>
+        </div>
+        <input type="submit" value="Thêm Nhân Viên" class="submit-btn">
+    </form>
+</section>
+<section class="table">
+    <div class="table-header">
+        <h2 class="header">Danh Sách Nhân Viên</h2>
+        <div class="search">
+            <form id="searchForm">
+                <input type="text" id="searchBox" class="searchTerm" placeholder="Tìm kiếm theo nhân viên..." />
+                <button type="submit" class="searchButton">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+    <table class="fl-table">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tên Hiển Thị</th>
+                <th>Email</th>
+                <th>Số Điện Thoại</th>
+                <th>Trạng Thái</th>
+                <th>Số Ngày Vào Làm</th>
+                <th>Thao Tác</th>
+            </tr>
+        </thead>
+        <tbody id="nhanVienTable">
+            <% data.forEach((nhanVien, index)=> { %>
+                <tr>
+                    <td>
+                        <%= index + 1 %>
+                    </td>
+                    <td>
+                        <%= nhanVien.hoTen %>
+                    </td>
+                    <td>
+                        <%= nhanVien.email %>
+                    </td>
+                    <td>
+                        <%= nhanVien.phoneNumber %>
+                    </td>
+                    <td>
+                        <%= nhanVien.trangThai %>
+                    </td>
+                    <td>
+                        <% const today=new Date(); const signUpDate=new Date(nhanVien.ngayDangKy); const timeDiff=today
+                            - signUpDate; const daysPassed=Math.floor(timeDiff / (1000 * 3600 * 24)); %>
+                            <%= daysPassed %> ngày
+                    </td>
+                    <td>
+                        <div class="controls">
+                            <button class="icon-btn open-popup" data-id="<%= nhanVien._id %>"
+                                data-hoTen="<%= nhanVien.hoTen %>" data-email="<%= nhanVien.email %>"
+                                data-soDienThoai="<%= nhanVien.phoneNumber %>"
+                                data-trangThai="<%= nhanVien.trangThai %>">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <form action="nhanVien/xoaNhanVien/<%= nhanVien._id %>?_method=DELETE" method="post">
+                                <button type="submit" class="icon-btn">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+    <div id="pagination" class="pagination-controls"></div>
+</section>
+<dialog id="editModal" close>
+    <h2>Chỉnh Sửa Nhân Viên</h2>
+    <form id="editForm" method="post">
+        <input type="hidden" name="_id" id="edit-id">
+        <div class="input-box">
+            <input type="text" placeholder="Mời Nhập Tên Nhân Viên" id="edit-hoTen"  name="hoTen" required value="">
+        </div>
+        <div class="input-box">
+            <input type="text" placeholder="Mời Nhập Email Nhân Viên" id="edit-email" name="email" required
+                value="">
+        </div>
+        <div class="input-box">
+            <input type="text" placeholder="Mời Nhập Số Điện Thoại Nhân Viên" id="edit-soDienThoai" name="phoneNumber"
+                required>
+        </div>
+        <div class="status-box">
+            <label>Trạng Thái</label>
+            <div class="status-option">
+                <div class="status">
+                    <input type="radio" name="trangThai" value="Hoạt động" id="edit-check-in-use">
+                    <label for="edit-check-in-use">Hoạt Động</label>
+                </div>
+                <div class="status">
+                    <input type="radio" name="trangThai" value="Không hoạt động" id="edit-check-maintainance">
+                    <label for="edit-check-maintainance">Không Hoạt Động</label>
+                </div>
+            </div>
+        </div>
+        <div class="controls">
+            <button type="button" class="close-btn">Đóng</button>
+            <button type="submit">Lưu</button>
+        </div>
+    </form>
+</dialog>
+<script type="text/javascript">
+    const tableBody = document.getElementById("nhanVienTable");
+    const pagination = document.getElementById("pagination");
+    const data = Array.from(tableBody.querySelectorAll("tr"));
+    const searchBox = document.getElementById('searchBox');
+    const openPopupButtons = document.querySelectorAll(".open-popup");
+    const editButtons = document.querySelectorAll('.open-popup');
+    const editModal = document.getElementById('editModal');
+    const closeModalButton = document.querySelector('.close-btn');
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.classList.toggle("close");
+        const icon = document.querySelector("#toggle-btn i");
+        icon.classList.toggle("fa-angle-double-left");
+        icon.classList.toggle("fa-angle-double-right");
+    }
+
+    function togglePasswordVisibility(fieldId, iconId) {
+        const passwordField = document.getElementById(fieldId);
+        const icon = document.getElementById(iconId);
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        } else {
+            passwordField.type = "password";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        }
+    }
+
+    function openEditModal(nhanVien) {
+        document.getElementById('editForm').action = `nhanVien/suaNhanVien/${nhanVien._id}?_method=PUT`;
+        document.getElementById('edit-id').value = nhanVien._id;
+        document.getElementById('edit-hoTen').value = nhanVien.hoTen;
+        document.getElementById('edit-email').value = nhanVien.email;
+        document.getElementById('edit-soDienThoai').value = nhanVien.phoneNumber;
+
+        const statusRadios = document.getElementsByName('trangThai');
+        statusRadios.forEach(radio => {
+            radio.checked = radio.value === nhanVien.trangThai;
+        });
+
+        editModal.showModal();
+    }
+
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const nhanVienData = {
+                _id: button.getAttribute('data-id'),
+                hoTen: button.getAttribute('data-hoTen'),
+                email: button.getAttribute('data-email'),
+                phoneNumber: button.getAttribute('data-soDienThoai'),
+                trangThai: button.getAttribute('data-trangThai'),
+            };
+            openEditModal(nhanVienData);
+        });
+    });
+
+
+    closeModalButton.addEventListener('click', () => {
+        editModal.close();
+    });
+
+    function checkPasswords() {
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+        if (password !== confirmPassword) {
+            alert("Mật khẩu không khớp. Vui lòng thử lại.");
+            return false;
+        }
+        return true;
+    }
+
+    function displayTablePage(page) {
+        tableBody.innerHTML = "";
+
+        const startIndex = (page - 1) * rowsPerPage;
+        const endIndex = Math.min(startIndex + rowsPerPage, data.length);
+
+        for (let i = startIndex; i < endIndex; i++) {
+            tableBody.appendChild(data[i]);
+        }
+
+        displayPagination(page);
+    }
+
+    const rowsPerPage = 5;
+
+    function displayPagination(currentPage) {
+        pagination.innerHTML = "";
+
+        const totalPages = Math.ceil(data.length / rowsPerPage);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const button = document.createElement("button");
+            button.innerText = i;
+            button.classList.add("pagination-btn");
+            if (i === currentPage) button.classList.add("active");
+
+            button.addEventListener("click", () => displayTablePage(i));
+            pagination.appendChild(button);
+        }
+    }
+
+    searchBox.addEventListener('input', function () {
+        const searchTerm = searchBox.value.toLowerCase();
+        const rows = tableBody.getElementsByTagName('tr');
+
+        Array.from(rows).forEach(row => {
+            const nameCell = row.cells[1];
+            const name = nameCell.textContent.toLowerCase();
+
+            if (name.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+    displayTablePage(1);
+</script>

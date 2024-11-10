@@ -2,6 +2,7 @@ const { SanBongModel } = require("../model/sanBong_model");
 const mongoose = require("mongoose");
 
 const chuSanLayout = "../views/layouts/chuSan";
+
 exports.getListFields = async (req, res, next) => {
   try {
     const locals = {

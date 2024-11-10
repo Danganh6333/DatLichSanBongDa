@@ -13,8 +13,7 @@
                 onfocus="this.type='time'; this.showPicker();" onblur="if (!this.value) this.type='text';" />
         </div>
         <div class="input-box">
-            <input type="text" placeholder="Mời Nhập Số Lương" name="tongTien" min="0"
-                max="2000000" required value="">
+            <input type="text" placeholder="Mời Nhập Số Lương" name="tongTien" min="0" max="2000000" required value="">
         </div>
         <input type="submit" value="Thêm Nước Uống" class="submit-btn">
     </form>
@@ -39,7 +38,7 @@
                 <th>Giờ Bắt Đầu</th>
                 <th>Giờ Kết Thúc</th>
                 <th>Trạng Thái</th>
-                <th>Số Lượng</th>
+                <th>Số Lương</th>
                 <th>Thao Tác</th>
             </tr>
         </thead>
@@ -59,15 +58,17 @@
                         <%= caLamViec.gioKetThuc %>
                     </td>
                     <td>
-                        <%= caLamViec.tongTien %>
+                        <%= caLamViec.trangThai %>
                     </td>
                     <td>
-                        <%= caLamViec.trangThai %>
+                        <%= caLamViec.tongTien %>
                     </td>
                     <td>
                         <div class="controls">
                             <button class="icon-btn open-popup" data-id='<%= caLamViec._id %>'
-                              >
+                                data-tenCa="<%= caLamViec.tenCa %>" data-gioBatDau="<%= caLamViec.gioBatDau %>"
+                                data-gioKetThuc="<%= caLamViec.gioKetThuc %>"
+                                data-trangThai="<%= caLamViec.trangThai %>" data-tongTien="<%= caLamViec.tongTien %>">
                                 <i class="fas fa-edit"></i>
                             </button>
 
@@ -83,3 +84,143 @@
     </table>
     <div id="pagination" class="pagination-controls"></div>
 </section>
+<dialog id="editModal" close>
+    <h2>Chỉnh Sửa Ca Làm Việc</h2>
+    <form id="editForm" method="post">
+        <input type="hidden" name="_id" id="edit-id">
+        <div class="input-box">
+            <input type="text" placeholder="Mời Nhập Tên Ca" id="edit-tenCa" name="tenCa" required value="">
+        </div>
+        <div class="input-box">
+            <input type="text" step="any" name="gioBatDau" id="edit-gioBatDau" placeholder="Mời Nhập Giờ Bắt Đầu"
+                required onfocus="this.type='time'; this.showPicker();" onblur="if (!this.value) this.type='text';" />
+        </div>
+        <div class="input-box">
+            <input type="text" step="any" name="gioKetThuc" id="edit-gioKetThuc" placeholder="Mời Nhập Giờ Kết Thúc"
+                required onfocus="this.type='time'; this.showPicker();" onblur="if (!this.value) this.type='text';" />
+        </div>
+        <div class="status-box">
+            <label>Trạng Thái</label>
+            <div class="status-option">
+                <div class="status">
+                    <input type="radio" name="trangThai" value="Hoạt Động" id="edit-check-in-use">
+                    <label for="edit-check-in-use">Hoạt Động</label>
+                </div>
+                <div class="status">
+                    <input type="radio" name="trangThai" value="Dừng Hoạt Động" id="edit-check-maintainance">
+                    <label for="edit-check-maintainance">Dừng Hoạt Động</label>
+                </div>
+            </div>
+        </div>
+        <div class="input-box">
+            <input type="text" placeholder="Mời Nhập Số Lương" id="edit-soLuong" name="tongTien" min="0" max="2000000"
+                required value="">
+        </div>
+        <div class="controls">
+            <button type="button" class="close-btn">Đóng</button>
+            <button type="submit">Lưu</button>
+        </div>
+    </form>
+</dialog>
+<script type="text/javascript">
+    const tableBody = document.getElementById("caLamViecTable");
+    const pagination = document.getElementById("pagination");
+    const data = Array.from(tableBody.querySelectorAll("tr"));
+    const dialog = document.querySelector("dialog");
+    const openPopupButtons = document.querySelectorAll(".open-popup");
+    const editButtons = document.querySelectorAll('.open-popup');
+    const editModal = document.getElementById('editModal');
+    const closeModalButton = document.querySelector('.close-btn');
+    const searchBox = document.getElementById('searchBox');
+
+    function openEditModal(caLamViec) {
+        const formAction = `caLamViec/suaCaLamViec/${caLamViec._id}?_method=PUT`;
+        document.getElementById('editForm').action = formAction;
+        document.getElementById('edit-id').value = caLamViec._id;
+        document.getElementById('edit-tenCa').value = caLamViec.tenCa;
+        document.getElementById('edit-gioBatDau').value = caLamViec.gioBatDau;
+        document.getElementById('edit-gioKetThuc').value = caLamViec.gioKetThuc;
+        document.getElementById('edit-soLuong').value = caLamViec.tongTien;
+
+        const statusRadios = document.getElementsByName('trangThai');
+        statusRadios.forEach(radio => {
+            radio.checked = radio.value === caLamViec.trangThai;
+        });
+        editModal.showModal();
+    }
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const caLamViecData = {
+                _id: button.getAttribute('data-id'),
+                tenCa: button.getAttribute('data-tenCa'),
+                gioBatDau: button.getAttribute('data-gioBatDau'),
+                gioKetThuc: button.getAttribute('data-gioKetThuc'),
+                trangThai: button.getAttribute('data-trangThai'),
+                tongTien: button.getAttribute('data-tongTien'),
+            };
+            openEditModal(caLamViecData);
+        });
+    });
+
+
+    closeModalButton.addEventListener('click', () => {
+        editModal.close();
+    });
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.classList.toggle("close");
+        const icon = document.querySelector("#toggle-btn i");
+        icon.classList.toggle("fa-angle-double-left");
+        icon.classList.toggle("fa-angle-double-right");
+    }
+    function displayTablePage(page) {
+        tableBody.innerHTML = "";
+
+        const startIndex = (page - 1) * rowsPerPage;
+        const endIndex = Math.min(startIndex + rowsPerPage, data.length);
+
+        for (let i = startIndex; i < endIndex; i++) {
+            tableBody.appendChild(data[i]);
+        }
+
+        displayPagination(page);
+    }
+
+    const rowsPerPage = 5;
+
+    function displayPagination(currentPage) {
+        pagination.innerHTML = "";
+
+        const totalPages = Math.ceil(data.length / rowsPerPage);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const button = document.createElement("button");
+            button.innerText = i;
+            button.classList.add("pagination-btn");
+            if (i === currentPage) button.classList.add("active");
+
+            button.addEventListener("click", () => displayTablePage(i));
+            pagination.appendChild(button);
+        }
+    }
+
+    searchBox.addEventListener('input', function () {
+        const searchTerm = searchBox.value.toLowerCase();
+        const rows = tableBody.getElementsByTagName('tr');
+
+        Array.from(rows).forEach(row => {
+            const nameCell = row.cells[1];
+            const name = nameCell.textContent.toLowerCase();
+
+            if (name.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+
+    displayTablePage(1);
+</script>

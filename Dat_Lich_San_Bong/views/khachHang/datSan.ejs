@@ -1,1 +1,64 @@
-<h1>Đặt Sân</h1>
+<div class="header">
+
+</div>
+<div class="appointments">
+    <section class="notes">
+    </section>
+    <section class="calendars">
+        <div class="wrapper">
+            <header>
+                <p class="current-date">
+
+                </p>
+                <div class="icons">
+                    <span id="prev" class="material-symbols-rounded">chevron_left</span>
+                    <span id="next" class="material-symbols-rounded">chevron_right</span>
+                </div>
+            </header>
+            <div class="calendar">
+                <ul class="weeks">
+                    <li>CN</li>
+                    <li>T2</li>
+                    <li>T3</li>
+                    <li>T4</li>
+                    <li>T5</li>
+                    <li>T6</li>
+                    <li>T7</li>
+                </ul>
+                <ul class="days">
+
+                </ul>
+            </div>
+        </div>
+    </section>
+    <section class="event">
+
+    </section>
+</div>
+<script type="text/javascript">
+    const currentDate = document.querySelector(".current-date");
+    const days = document.querySelector(".days");
+    const prevNextIcon = document.querySelectorAll(".icon span") 
+    let date = new Date();
+    currYear = date.getFullYear();
+    currMonth = date.getMonth();
+
+    const months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12']
+    let liTag = ''
+    const renderCalendar = () => {
+        let lastDateOfMonth = new Date(currYear, currMonth + 1, 0).getDate();
+        for (let index = 0; index < lastDateOfMonth; index++) {
+            liTag += `<li>${index}</li>`
+        }
+        currentDate.innerText = `${months[currMonth]} ${currYear}`
+        days.innerHTML = liTag;
+    }
+    renderCalendar()
+
+    prevNextIcon.forEach(icon =>{
+        icon.addEventListener("click",()=> {
+            console.log(``);
+            
+        })
+    })
+</script>

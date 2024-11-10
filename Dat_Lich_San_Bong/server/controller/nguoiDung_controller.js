@@ -40,11 +40,17 @@ exports.SignIn = async (req, res, next) => {
     await mongoose.connect(process.env.MONGO_URI);
     const { email, matKhau } = req.body;
     const user = await NguoiDungModel.findOne({ email });
+    
     if (!user)
       return res
         .status(400)
         .json({ message: "Email hoặc mật khẩu không chính xác." });
     const isMatch = await bcrypt.compare(matKhau, user.matKhau);
+
+    if (user.trangThai !== "Hoạt động") {
+      return res.status(403).json({ message: "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên." });
+    }
+
     if (!isMatch)
       return res
         .status(400)
@@ -60,29 +66,12 @@ exports.SignIn = async (req, res, next) => {
     } else if (user.vaiTro === "staff") {
       res.cookie("token", token, { httpOnly: true }).redirect("/nhanVien");
     } else if (user.vaiTro === "admin") {
-      res.cookie("token", token, { httpOnly: true }).redirect("/chuSan/nguoiDung");
+      res.cookie("token", token, { httpOnly: true }).redirect("/chuSan/nhanVien");
     } else {
       res.status(400).json({ message: "Vai trò không xác định." });
     }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });
-  }
-};
-
-exports.getListUsers = async (req, res, next) => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    const locals = {
-      title: "Trang Chủ",
-      description:
-        "Website đặt sân bóng dễ dàng và nhanh chóng, cung cấp dịch vụ đặt lịch, thanh toán trực tuyến, và hỗ trợ quản lý sân cho chủ sở hữu.",
-      userName: req.user.hoTen,
-      currentRoute: `/chuSan`,
-    };
-    const data = await NguoiDungModel.find().sort({ createdAt: -1 });
-    res.render("chuSan/nguoiDung", { locals, layout: chuSanLayout, data });
-  } catch (error) {
-    console.log(error);
   }
 };

@@ -26,6 +26,10 @@ const NguoiDungSchema = new db.Schema({
         type: String,
         enum: ["Hoạt động", "Không hoạt động"],
         default : "Hoạt động"
+    },
+    ngayDangKy : {
+        type: Date,
+        default: Date.now
     }
 },{
     collection: 'nguoiDungs'

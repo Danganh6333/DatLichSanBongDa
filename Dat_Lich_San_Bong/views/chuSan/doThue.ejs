@@ -28,7 +28,7 @@
         <h2 class="header">Danh Sách Đồ Thuê</h2>
         <div class="search">
             <form id="searchForm">
-                <input type="text" id="searchBox" class="searchTerm" placeholder="Tìm kiếm theo tên sân bóng..." />
+                <input type="text" id="searchBox" class="searchTerm" placeholder="Tìm kiếm theo tên đồ..." />
                 <button type="submit" class="searchButton">
                     <i class="fa fa-search"></i>
                 </button>
@@ -60,7 +60,7 @@
                         <img src=" <%= doThue.anhDichVu %>" width="70" alt="" srcset="">
                     </td>
                     <td>
-                        <%= doThue.giaDichVu %>
+                        <%= doThue.giaDichVu.toLocaleString() %>
                     </td>
                     <td>
                         <%= doThue.trangThai %>
