@@ -13,33 +13,25 @@
     <section class="notes">
         <h2>Chú Giải Trạng Thái</h2>
         <div class="status-item">
-            <span class="status-icon">⏰</span>
             <p>Sau thời gian cho phép đặt</p>
         </div>
         <div class="status-item">
-            <span class="status-icon">🟢</span>
             <p>Trạng thái mới đặt</p>
         </div>
         <div class="status-item">
-            <span class="status-icon">🔴</span>
             <p>Sân đã được đặt hết</p>
         </div>
-
         <h2>Sau Khi Thanh Toán</h2>
         <div class="status-item">
-            <span class="status-icon">⚽</span>
             <p>Trạng thái đang đá</p>
         </div>
         <div class="status-item">
-            <span class="status-icon">🚫</span>
             <p>Trạng thái Chờ nhận sân</p>
         </div>
         <div class="status-item">
-            <span class="status-icon">💰</span>
             <p>Trạng thái Chờ thanh toán</p>
         </div>
         <div class="status-item">
-            <span class="status-icon">❌</span>
             <p>Trạng thái Đặt nhưng không đá</p>
         </div>
     </section>
@@ -87,6 +79,16 @@
                 </button>
                 <% }) %>
         </div>
+        <div class="date-select">
+            <label for="dateType">Chọn loại ngày:</label>
+            <select id="dateType" onchange="updateDatePickerMode()">
+                <option value="single">Chọn Một Ngày</option>
+                <option value="multiple">Chọn Nhiều Ngày</option>
+            </select>
+
+            <label for="datePicker">Chọn Ngày:</label>
+            <input type="text" id="datePicker" placeholder="Chọn ngày" />
+        </div>
         <div class="button-group">
             <button type="button" class="btn save" onclick="saveEvent()">Lưu Ca</button>
         </div>
@@ -128,89 +130,117 @@
     </form>
 </div>
 <script type="text/javascript">
-  let selectedDate = '';
-let selectedCa = null;
-let calendar;
 
-function toggleDropdown() {
-    const dropdown = document.getElementById("profileDropdown");
-    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-}
+    let selectedDates = [];
+    let selectedCa = null;
+    let calendar;
+    let datePicker;
 
-window.onclick = function (event) {
-    if (!event.target.closest('.profile')) {
-        document.getElementById("profileDropdown").style.display = "none";
+    function selectCa(id, tenCa, gioBatDau, gioKetThuc, tongTien, event) {
+        selectedCa = { _id: id, tenCa, gioBatDau, gioKetThuc, tongTien };
+        document.querySelectorAll('.caLamViec-item').forEach(el => el.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
     }
-}
 
-function selectCa(id, tenCa, gioBatDau, gioKetThuc, tongTien, event) {
-    selectedCa = {
-        _id: id,
-        tenCa: tenCa,
-        gioBatDau: gioBatDau,
-        gioKetThuc: gioKetThuc,
-        tongTien: tongTien
-    };
+    document.addEventListener('DOMContentLoaded', function () {
+        const calendarEl = document.getElementById('calendar');
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+            },
+            selectable: true,
+            dateClick: function (info) {
+                const selected = new Date(info.dateStr);
+                const today = new Date();
 
-    document.querySelectorAll('.caLamViec-item').forEach(el => el.classList.remove('selected'));
-    event.currentTarget.classList.add('selected');
-}
+                // Console log the selected date
+                console.log(selected, "Selected Date");
 
-document.addEventListener('DOMContentLoaded', function () {
-    var calendarEl = document.getElementById('calendar');
-    calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-        },
-        selectable: true,
-        dateClick: function (info) {
-            console.log('Clicked on: ' + info.dateStr);
-            selectedDate = info.dateStr;
-            openForm();
-        },
-    });
-    calendar.render();
-});
+                today.setHours(0, 0, 0, 0);
+                selected.setHours(0, 0, 0, 0);
 
-function openForm() {
-    closeAllPopups();
-    document.getElementById("myForm").style.display = "block";
-}
+                if (selected <= today) {
+                    alert('Ngày đã qua hoặc là ngày hiện tại, bạn không thể chọn.');
+                    return;
+                }
 
-function closeForm() {
-    document.getElementById("myForm").style.display = "none";
-}
-
-function openAppointment() {
-    closeAllPopups();
-    document.getElementById("addAppointment").style.display = "block";
-}
-
-function closeAppointment() { 
-    document.getElementById("addAppointment").style.display = "none";
-}
-
-function closeAllPopups() {
-    closeForm();
-    closeAppointment();
-}
-
-function saveEvent() {
-    if (selectedDate && selectedCa) {
-        calendar.addEvent({
-            title: selectedCa.tenCa,
-            start: selectedDate + 'T' + selectedCa.gioBatDau,
-            end: selectedDate + 'T' + selectedCa.gioKetThuc,
-            description: selectedCa.tongTien + ' VND',
-            allDay: false
+                selectedDates = [info.dateStr];
+                datePicker.setDate(info.dateStr, true); // Set date in flatpickr
+                openForm();
+            },
         });
-        closeForm();
-    } else {
-        console.error('Please select a valid caLamViec.');
+        calendar.render();
+
+        datePicker = flatpickr("#datePicker", {
+            dateFormat: "Y-m-d",
+            mode: "single",
+            minDate: new Date().fp_incr(1),
+            onChange: function (dates) {
+                selectedDates = dates.map(date => date.toISOString().split('T')[0]);
+            }
+        });
+    });
+
+    function updateDatePickerMode() {
+        const dateType = document.getElementById("dateType").value;
+        datePicker.set("mode", dateType === "multiple" ? "multiple" : "single");
+        selectedDates = [];
     }
-}
+
+    function saveEvent() {
+        if (!selectedCa) {
+            alert("Vui lòng chọn một ca làm việc trước.");
+            return;
+        }
+        if (selectedDates.length === 0) {
+            alert("Vui lòng chọn ít nhất một ngày.");
+            return;
+        }
+
+        console.log(selectedDates);
+
+        selectedDates.forEach(date => {
+        
+            const startDate = new Date(`${date}T${selectedCa.gioBatDau}:00`);
+            const endDate = new Date(`${date}T${selectedCa.gioKetThuc}:00`);
+
+            startDate.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset() + 7 * 60);
+            endDate.setMinutes(endDate.getMinutes() - endDate.getTimezoneOffset() + 7 * 60);
+
+            console.log(startDate, "Start");
+            console.log(endDate, "End");
+
+            calendar.addEvent({
+                title: selectedCa.tenCa,
+                start: startDate,
+                end: endDate,
+                description: `${selectedCa.tongTien} VND`,
+                allDay: false
+            });
+        });
+
+        closeForm();
+    }
+
+    function openForm() {
+        document.getElementById("myForm").style.display = "block";
+    }
+
+    function closeForm() {
+        document.getElementById("myForm").style.display = "none";
+    }
+
+    function openAppointment() {
+        closeAllPopups();
+        document.getElementById("addAppointment").style.display = "block";
+    }
+
+    function closeAppointment() {
+        document.getElementById("addAppointment").style.display = "none";
+    }
+
 
 </script>
