@@ -15,9 +15,9 @@ exports.getListBookings = async (req, res, next) => {
         "Website đặt sân bóng dễ dàng và nhanh chóng, cung cấp dịch vụ đặt lịch, thanh toán trực tuyến, và hỗ trợ quản lý sân cho chủ sở hữu.",
       userName: req.user.hoTen,
       userId: req.user.id,
-      currentRoute: `/khachHang`,
+      currentRoute: `/khachHang/datLich`,
     };
-    const data = await DatLichModel.find({ id_NguoiDung: req.user.id })
+    const data = await DatLichModel.find({ id_NguoiDung: locals.userId })
       .populate("id_NguoiDung")
       .populate("id_SanBong")
       .sort({ createdAt: -1 });
@@ -33,6 +33,43 @@ exports.getListBookings = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+exports.getBookingsData = async (req, res, next) => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    const locals = {
+      title: "Trang Chủ",
+      description:
+        "Website đặt sân bóng dễ dàng và nhanh chóng, cung cấp dịch vụ đặt lịch, thanh toán trực tuyến, và hỗ trợ quản lý sân cho chủ sở hữu.",
+      userName: req.user.hoTen,
+      userId: req.user.id,
+    };
+
+    const data = await DatLichModel.find({ id_NguoiDung: locals.userId })
+      .populate("id_NguoiDung")
+      .populate("id_SanBong")
+      .sort({ createdAt: -1 });
+
+    const calendarEvents = data.map(booking => {
+      const giaTheoGio = booking.id_SanBong.giaTheoGio;
+      const durationHours = (new Date(booking.ngayKetThuc) - new Date(booking.ngayBatDau)) / 3600000;
+      const tongTien = giaTheoGio * durationHours;
+
+      return {
+        title: booking.id_SanBong.tenSan,
+        start: booking.ngayBatDau,
+        end: booking.ngayKetThuc,
+        description: `${tongTien.toFixed(0)} VND`,
+        allDay: true,
+      };
+    });  
+
+    res.status(200).json(calendarEvents);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Lỗi khi lấy dữ liệu đặt lịch" });
   }
 };
 

@@ -26,13 +26,9 @@ const DatLichSchema = new db.Schema({
     },
     trangThai : {
         type : String,
-        enum : ["Đang chờ","Xác nhận","Hủy bỏ"],
-        default : "Đang chờ"
+        enum : ["Mới Đặt","Đặt Hết","Hủy bỏ"],
+        default : "Mới Đặt"
     },
-    tongTien : {
-        type : Number,
-        required : true
-    }
 },{
     collection : 'datLichs'
 })

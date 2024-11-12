@@ -6,6 +6,7 @@ const { SanBongModel } = require("../model/sanBong_model");
 const { DatLichModel } = require("../model/datLich_model");
 const {
   addBooking,
+  getBookingsData,
   updateBookingStatus,
   deleteBooking,
   getListBookings,
@@ -37,9 +38,10 @@ router.get(
   getListBookings
 );
 
-router.post("datLich/dat", authenticate, authorize("user"),addBooking);
-router.put('datLich/suaLich', authenticate, authorize("user"),updateBookingStatus);
-router.delete('datLich/xoaLich', authenticate, authorize("user"),deleteBooking)
+router.get("/datLich/lich", authenticate, authorize("user"), getBookingsData)
+router.post("/datLich/dat", authenticate, authorize("user"),addBooking);
+router.put('/datLich/suaLich', authenticate, authorize("user"),updateBookingStatus);
+router.delete('/datLich/xoaLich', authenticate, authorize("user"),deleteBooking);
 
 router.get("/dangXuat",logOut)
 module.exports = router;

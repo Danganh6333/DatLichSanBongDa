@@ -47,14 +47,10 @@
                     <th>Thao tác</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="event-details">
                 <tr>
-                    <td>Thông tin ca 1</td>
-                    <td><button class="action-btn">Xem</button></td>
-                </tr>
-                <tr>
-                    <td>Thông tin ca 2</td>
-                    <td><button class="action-btn">Xoá</button></td>
+                    <td id="event-info">No event selected</td>
+                    <td><button class="action-btn" onclick="deleteEvent()">Xóa</button></td>
                 </tr>
             </tbody>
         </table>
@@ -83,12 +79,13 @@
             <label for="dateType">Chọn loại ngày:</label>
             <select id="dateType" onchange="updateDatePickerMode()">
                 <option value="single">Chọn Một Ngày</option>
-                <option value="multiple">Chọn Nhiều Ngày</option>
+                <option value="range">Chọn Nhiều Ngày</option>
             </select>
 
             <label for="datePicker">Chọn Ngày:</label>
             <input type="text" id="datePicker" placeholder="Chọn ngày" />
         </div>
+
         <div class="button-group">
             <button type="button" class="btn save" onclick="saveEvent()">Lưu Ca</button>
         </div>
@@ -125,22 +122,20 @@
                 </td>
             </tr>
         </table>
-        <p></p>
-        <button type="button" class="btn cancel" onclick="closeAppointment()">Close</button>
+        <div>
+
+        </div>
+        <div class="button-group">
+            <button type="button" class="btn cancel" onclick="closeAppointment()">Đóng</button>
+            <button type="button" class="btn save" onclick="">Đặt lịch và thanh toán</button>
+        </div>
     </form>
 </div>
 <script type="text/javascript">
-
     let selectedDates = [];
     let selectedCa = null;
     let calendar;
     let datePicker;
-
-    function selectCa(id, tenCa, gioBatDau, gioKetThuc, tongTien, event) {
-        selectedCa = { _id: id, tenCa, gioBatDau, gioKetThuc, tongTien };
-        document.querySelectorAll('.caLamViec-item').forEach(el => el.classList.remove('selected'));
-        event.currentTarget.classList.add('selected');
-    }
 
     document.addEventListener('DOMContentLoaded', function () {
         const calendarEl = document.getElementById('calendar');
@@ -151,78 +146,157 @@
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
             },
+            locale: 'vi',
             selectable: true,
-            dateClick: function (info) {
-                const selected = new Date(info.dateStr);
-                const today = new Date();
-
-                // Console log the selected date
-                console.log(selected, "Selected Date");
-
-                today.setHours(0, 0, 0, 0);
-                selected.setHours(0, 0, 0, 0);
-
-                if (selected <= today) {
-                    alert('Ngày đã qua hoặc là ngày hiện tại, bạn không thể chọn.');
-                    return;
+            dateClick: handleDateClick,
+            events: async function (fetchInfo, successCallback, failureCallback) {
+                try {
+                    const response = await fetch("/datLich/lich");
+                    const data = await response.json();
+                    successCallback(data);
+                } catch (error) {
+                    failureCallback(error);
                 }
-
-                selectedDates = [info.dateStr];
-                datePicker.setDate(info.dateStr, true); // Set date in flatpickr
-                openForm();
-            },
+            }
         });
         calendar.render();
 
-        datePicker = flatpickr("#datePicker", {
-            dateFormat: "Y-m-d",
-            mode: "single",
-            minDate: new Date().fp_incr(1),
-            onChange: function (dates) {
-                selectedDates = dates.map(date => date.toISOString().split('T')[0]);
-            }
-        });
+        initializeDatePicker("single");
     });
+
+    function initializeDatePicker(mode) {
+        datePicker = flatpickr("#datePicker", {
+            locale: 'vn',
+            dateFormat: "Y-m-d",
+            mode: mode,
+            minDate: new Date().fp_incr(1),
+            onChange: function (selectedDatesArray) {
+                selectedDates = selectedDatesArray;
+                console.log(selectedDates, "JSJSJAJASLALASKASKLAKLSAKLS");
+            },
+            eventClick: displayEventDetails,
+        });
+    }
+
+    function displayEventDetails(info) {
+        const event = info.event;
+        const eventDetailsRow = document.querySelector('#event-details');
+        eventDetailsRow.innerHTML = `
+        <tr>
+            <td>${event.title} - ${event.start.toLocaleTimeString()} - ${event.end.toLocaleTimeString()} - ${event.start.toLocaleDateString()}</td>
+            <td><button class="action-btn" onclick="deleteEvent('${event.id}')">Xóa</button></td>
+        </tr>
+    `;
+    }
 
     function updateDatePickerMode() {
         const dateType = document.getElementById("dateType").value;
-        datePicker.set("mode", dateType === "multiple" ? "multiple" : "single");
-        selectedDates = [];
+        const newMode = dateType === "range" ? "range" : "single";
+        datePicker.destroy();
+        initializeDatePicker(newMode);
+    }
+
+    function handleDateClick(info) {
+        const selectedDate = new Date(info.dateStr);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+
+        if (datePicker.config.mode === "single" && selectedDate <= today) {
+            alert('Ngày đã qua hoặc là ngày hiện tại, bạn không thể chọn.');
+            return;
+        }
+
+        if (datePicker.config.mode === "range") {
+            selectedDates = [selectedDate];
+            datePicker.setDate(selectedDates, true);
+
+            const selectedRange = datePicker.selectedDates;
+            const overlappingEvents = calendar.getEvents().filter(event => {
+                const eventStartDate = new Date(event.startStr);
+                const eventEndDate = new Date(event.endStr);
+                return selectedRange.some(selectedDate => {
+                    const isOverlapping = eventStartDate <= selectedDate && eventEndDate >= selectedDate;
+                    return isOverlapping;
+                });
+            });
+
+            console.log('Overlapping Events:', overlappingEvents);
+
+            if (overlappingEvents.length > 0) {
+                alert('Đã có sự kiện cho ngày này trong khoảng thời gian bạn chọn!');
+                return;
+            }
+        }
+
+        const existingEvents = calendar.getEvents().filter(event => event.startStr.startsWith(info.dateStr));
+        if (existingEvents.length > 0) {
+            alert('Đã có sự kiện cho ngày này!');
+            return;
+        }
+        document.getElementById("datePicker").value = info.dateStr;
+        openForm();
+    }
+
+
+
+    function selectCa(id, tenCa, gioBatDau, gioKetThuc, tongTien, event) {
+        selectedCa = { _id: id, tenCa, gioBatDau, gioKetThuc, tongTien };
+
+        const startDate = new Date(gioBatDau);
+        const endDate = new Date(gioKetThuc);
+
+        datePicker.setDate([startDate, endDate]);
+
+        document.querySelectorAll('.caLamViec-item').forEach(el => el.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
     }
 
     function saveEvent() {
-        if (!selectedCa) {
-            alert("Vui lòng chọn một ca làm việc trước.");
-            return;
-        }
-        if (selectedDates.length === 0) {
-            alert("Vui lòng chọn ít nhất một ngày.");
-            return;
-        }
+    if (!selectedCa) {
+        alert("Vui lòng chọn một ca làm việc trước.");
+        return;
+    }
+    if (!selectedDates || selectedDates.length === 0) {
+        alert("Vui lòng chọn ngày hợp lệ.");
+        return;
+    }
 
-        console.log(selectedDates);
+    // Loop through each selected date to create separate events
+    selectedDates.forEach(date => {
+        const dateISO = date.toISOString().split('T')[0];
 
-        selectedDates.forEach(date => {
-        
-            const startDate = new Date(`${date}T${selectedCa.gioBatDau}:00`);
-            const endDate = new Date(`${date}T${selectedCa.gioKetThuc}:00`);
+        // Set start and end datetime for each selected day
+        const startEventDate = new Date(`${dateISO}T${selectedCa.gioBatDau}:00`);
+        const endEventDate = new Date(`${dateISO}T${selectedCa.gioKetThuc}:00`);
 
-            startDate.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset() + 7 * 60);
-            endDate.setMinutes(endDate.getMinutes() - endDate.getTimezoneOffset() + 7 * 60);
+        // Adjust for timezone offset
+        startEventDate.setMinutes(startEventDate.getMinutes() - startEventDate.getTimezoneOffset() + 7 * 60);
+        endEventDate.setMinutes(endEventDate.getMinutes() - endEventDate.getTimezoneOffset() + 7 * 60);
 
-            console.log(startDate, "Start");
-            console.log(endDate, "End");
-
-            calendar.addEvent({
-                title: selectedCa.tenCa,
-                start: startDate,
-                end: endDate,
-                description: `${selectedCa.tongTien} VND`,
-                allDay: false
-            });
+        console.log("Tên Ca: " + selectedCa.tenCa,
+            "Start Event Date: " + startEventDate,
+            "End Event Date: " + endEventDate,
+            `${selectedCa.tongTien} VND`
+        );
+        calendar.addEvent({
+            title: selectedCa.tenCa,
+            start: startEventDate,
+            end: endEventDate,
+            description: `${selectedCa.tongTien} VND`,
+            allDay: false
         });
+    });
 
-        closeForm();
+    closeForm();
+    selectedDates = null;
+}
+
+
+
+    function deselectCaLamViec() {
+        selectedCa = null;
+        document.querySelectorAll('.caLamViec-item').forEach(el => el.classList.remove('selected'));
     }
 
     function openForm() {
@@ -231,6 +305,8 @@
 
     function closeForm() {
         document.getElementById("myForm").style.display = "none";
+        selectedDates = [];
+
     }
 
     function openAppointment() {
@@ -238,9 +314,13 @@
         document.getElementById("addAppointment").style.display = "block";
     }
 
-    function closeAppointment() {
-        document.getElementById("addAppointment").style.display = "none";
+    function closeAllPopups() {
+        closeForm();
+        closeAppointment();
     }
 
-
+    function closeAppointment() {
+        document.getElementById("addAppointment").style.display = "none";
+        deselectCaLamViec()
+    }
 </script>
