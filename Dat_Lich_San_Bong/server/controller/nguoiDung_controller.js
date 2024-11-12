@@ -75,3 +75,12 @@ exports.SignIn = async (req, res, next) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+exports.logOut = async (req, res, next) => {
+  try {
+    res.clearCookie("token").redirect("/")
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};

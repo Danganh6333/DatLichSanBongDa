@@ -620,6 +620,35 @@ dialog .controls button:hover {
     /* Highlight on hover */
 }
 
+dialog .input-box input[type="text"],
+dialog .input-box input[type="number"],
+dialog .input-box input[type="time"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    color: #2d2d44;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #ffffff;
+    margin-top: 0.5em;
+    outline: none;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+
+/* Ensure consistency for time inputs */
+dialog .input-box input[type="time"] {
+    appearance: none; 
+}
+
+/* Focus state styling */
+dialog .input-box input[type="text"]:focus,
+dialog .input-box input[type="number"]:focus,
+dialog .input-box input[type="time"]:focus {
+    border-color: var(--accent-clr);
+    /* Highlight border on focus */
+}
+
 
 /*Pagination Styling*/
 .pagination-controls {

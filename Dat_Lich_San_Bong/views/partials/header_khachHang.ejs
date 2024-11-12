@@ -4,12 +4,14 @@
         <ul class="nav__links">
             <li><a href="/khachHang" class="<%= isActiveRoute('/khachHang', locals.currentRoute)
              %>">Trang Chủ</a></li>
-            <li><a href="/datLich" class="<%= isActiveRoute('/datLich', locals.currentRoute) %>" >Đặt Lịch</a></li>
+            <li><a href="khachHang/datLich" class="<%= isActiveRoute('khachHang/datLich', locals.currentRoute) %>" >Đặt Lịch</a></li>
         </ul>
     </nav>
-    <div class="profile">
+    <div class="profile"  onclick="toggleDropdown()">
         <img src="/images/account.png" alt="Profile Picture" class="profile-pic">
         <span class="profile-name"><%= locals.userName || "Khách" %></span>
-
+        <div id="profileDropdown" class="dropdown-content">
+            <a href="/dangXuat">Đăng Xuất</a>
+        </div>
     </div>
 </header>

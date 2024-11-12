@@ -1,64 +1,216 @@
 <div class="header">
-
+    <button class="header-btn">Đổi Lịch Nhanh</button>
+    <select class="header-dropdown">
+        <% sanBongs.forEach(sanBong=> { %>
+            <option value="<%= sanBong._id %>">
+                <%= sanBong.tenSan %>
+            </option>
+            <% }) %>
+    </select>
+    <button class="header-btn" onclick="openAppointment()">Điền Thông Tin</button>
 </div>
 <div class="appointments">
     <section class="notes">
-    </section>
-    <section class="calendars">
-        <div class="wrapper">
-            <header>
-                <p class="current-date">
+        <h2>Chú Giải Trạng Thái</h2>
+        <div class="status-item">
+            <span class="status-icon">⏰</span>
+            <p>Sau thời gian cho phép đặt</p>
+        </div>
+        <div class="status-item">
+            <span class="status-icon">🟢</span>
+            <p>Trạng thái mới đặt</p>
+        </div>
+        <div class="status-item">
+            <span class="status-icon">🔴</span>
+            <p>Sân đã được đặt hết</p>
+        </div>
 
-                </p>
-                <div class="icons">
-                    <span id="prev" class="material-symbols-rounded">chevron_left</span>
-                    <span id="next" class="material-symbols-rounded">chevron_right</span>
-                </div>
-            </header>
-            <div class="calendar">
-                <ul class="weeks">
-                    <li>CN</li>
-                    <li>T2</li>
-                    <li>T3</li>
-                    <li>T4</li>
-                    <li>T5</li>
-                    <li>T6</li>
-                    <li>T7</li>
-                </ul>
-                <ul class="days">
-
-                </ul>
-            </div>
+        <h2>Sau Khi Thanh Toán</h2>
+        <div class="status-item">
+            <span class="status-icon">⚽</span>
+            <p>Trạng thái đang đá</p>
+        </div>
+        <div class="status-item">
+            <span class="status-icon">🚫</span>
+            <p>Trạng thái Chờ nhận sân</p>
+        </div>
+        <div class="status-item">
+            <span class="status-icon">💰</span>
+            <p>Trạng thái Chờ thanh toán</p>
+        </div>
+        <div class="status-item">
+            <span class="status-icon">❌</span>
+            <p>Trạng thái Đặt nhưng không đá</p>
         </div>
     </section>
+    <section class="calendars">
+        <div id="calendar"></div>
+    </section>
     <section class="event">
-
+        <h2>Sự Kiện</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Thông tin ca</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Thông tin ca 1</td>
+                    <td><button class="action-btn">Xem</button></td>
+                </tr>
+                <tr>
+                    <td>Thông tin ca 2</td>
+                    <td><button class="action-btn">Xoá</button></td>
+                </tr>
+            </tbody>
+        </table>
     </section>
 </div>
+<div class="form-popup" id="myForm">
+    <form action="" class="form-container">
+        <h2 class="form-title">
+            Lựa Chọn Ca
+            <span class="close-icon" onclick="closeForm()">&#215;</span>
+        </h2>
+        <div class="caLamViec-grid">
+            <% caLamViecs.forEach(element=> { %>
+                <button type="button" class="caLamViec-item"
+                    onclick="selectCa('<%= element._id %>', '<%= element.tenCa %>', '<%= element.gioBatDau %>', '<%= element.gioKetThuc %>', '<%= element.tongTien %>', event)">
+                    <p><strong>
+                            <%= element.tenCa %>
+                        </strong>: <%= element.gioBatDau %> - <%= element.gioKetThuc %>
+                    </p>
+                    <p>Giá Tiền: <%= element.tongTien %>
+                    </p>
+                </button>
+                <% }) %>
+        </div>
+        <div class="button-group">
+            <button type="button" class="btn save" onclick="saveEvent()">Lưu Ca</button>
+        </div>
+    </form>
+</div>
+<div class="form-popup" id="addAppointment">
+    <form action="" class="form-container">
+        <h2 class="form-title">Đặt Sân</h2>
+        <table>
+            <tr>
+                <th>Ca</th>
+                <th>Ngày</th>
+                <th>Giá Sân</th>
+                <th>Thao tác</th>
+            </tr>
+            <tr>
+                <td>
+                    <select class="header-dropdown">
+                        <% sanBongs.forEach(sanBong=> { %>
+                            <option value="<%= sanBong._id %>">
+                                <%= sanBong.tenSan %>
+                            </option>
+                            <% }) %>
+                    </select>
+                </td>
+                <td>
+                    <input type="date" value="2017-06-01" />
+                </td>
+                <td>
+                    <input type="number" name="" id="" placeholder="Nhập giá">
+                </td>
+                <td class="button-group">
+                    <button>Thêm Ca</button>
+                </td>
+            </tr>
+        </table>
+        <p></p>
+        <button type="button" class="btn cancel" onclick="closeAppointment()">Close</button>
+    </form>
+</div>
 <script type="text/javascript">
-    const currentDate = document.querySelector(".current-date");
-    const days = document.querySelector(".days");
-    const prevNextIcon = document.querySelectorAll(".icon span") 
-    let date = new Date();
-    currYear = date.getFullYear();
-    currMonth = date.getMonth();
+  let selectedDate = '';
+let selectedCa = null;
+let calendar;
 
-    const months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12']
-    let liTag = ''
-    const renderCalendar = () => {
-        let lastDateOfMonth = new Date(currYear, currMonth + 1, 0).getDate();
-        for (let index = 0; index < lastDateOfMonth; index++) {
-            liTag += `<li>${index}</li>`
-        }
-        currentDate.innerText = `${months[currMonth]} ${currYear}`
-        days.innerHTML = liTag;
+function toggleDropdown() {
+    const dropdown = document.getElementById("profileDropdown");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+}
+
+window.onclick = function (event) {
+    if (!event.target.closest('.profile')) {
+        document.getElementById("profileDropdown").style.display = "none";
     }
-    renderCalendar()
+}
 
-    prevNextIcon.forEach(icon =>{
-        icon.addEventListener("click",()=> {
-            console.log(``);
-            
-        })
-    })
+function selectCa(id, tenCa, gioBatDau, gioKetThuc, tongTien, event) {
+    selectedCa = {
+        _id: id,
+        tenCa: tenCa,
+        gioBatDau: gioBatDau,
+        gioKetThuc: gioKetThuc,
+        tongTien: tongTien
+    };
+
+    document.querySelectorAll('.caLamViec-item').forEach(el => el.classList.remove('selected'));
+    event.currentTarget.classList.add('selected');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+    calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+        },
+        selectable: true,
+        dateClick: function (info) {
+            console.log('Clicked on: ' + info.dateStr);
+            selectedDate = info.dateStr;
+            openForm();
+        },
+    });
+    calendar.render();
+});
+
+function openForm() {
+    closeAllPopups();
+    document.getElementById("myForm").style.display = "block";
+}
+
+function closeForm() {
+    document.getElementById("myForm").style.display = "none";
+}
+
+function openAppointment() {
+    closeAllPopups();
+    document.getElementById("addAppointment").style.display = "block";
+}
+
+function closeAppointment() { 
+    document.getElementById("addAppointment").style.display = "none";
+}
+
+function closeAllPopups() {
+    closeForm();
+    closeAppointment();
+}
+
+function saveEvent() {
+    if (selectedDate && selectedCa) {
+        calendar.addEvent({
+            title: selectedCa.tenCa,
+            start: selectedDate + 'T' + selectedCa.gioBatDau,
+            end: selectedDate + 'T' + selectedCa.gioKetThuc,
+            description: selectedCa.tongTien + ' VND',
+            allDay: false
+        });
+        closeForm();
+    } else {
+        console.error('Please select a valid caLamViec.');
+    }
+}
+
 </script>

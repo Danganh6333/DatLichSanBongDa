@@ -13,7 +13,6 @@ exports.getListShifts = async (req, res, next) => {
       currentRoute: `/caLamViec`,
     };
     const data = await CaLamViecModel.find();
-
     res.render("chuSan/ca", { locals, layout: chuSanLayout, data });
   } catch (error) {
     console.log(error);

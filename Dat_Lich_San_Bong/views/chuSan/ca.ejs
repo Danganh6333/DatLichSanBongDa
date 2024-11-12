@@ -15,7 +15,7 @@
         <div class="input-box">
             <input type="text" placeholder="Mời Nhập Số Lương" name="tongTien" min="0" max="2000000" required value="">
         </div>
-        <input type="submit" value="Thêm Nước Uống" class="submit-btn">
+        <input type="submit" value="Thêm Ca Làm" class="submit-btn">
     </form>
 </section>
 <section class="table">
@@ -61,7 +61,7 @@
                         <%= caLamViec.trangThai %>
                     </td>
                     <td>
-                        <%= caLamViec.tongTien %>
+                        <%= caLamViec.tongTien.toLocaleString()  %>
                     </td>
                     <td>
                         <div class="controls">

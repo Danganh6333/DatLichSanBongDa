@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Upload = require("../config/upload");
 const { authenticate, authorize } = require("../middleware/authMiddleware");
+const {logOut} = require("../controller/nguoiDung_controller")
 const {
   getListFields,
   addField,
@@ -296,4 +297,5 @@ router.get(
   }
 );
 
+router.get("/chuSan/dangXuat",logOut)
 module.exports = router;
