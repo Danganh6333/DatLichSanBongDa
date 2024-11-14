@@ -1,6 +1,6 @@
 <div class="header">
     <button class="header-btn">Đổi Lịch Nhanh</button>
-    <select class="header-dropdown">
+    <select id="sanBongDropdown" class="header-dropdown">
         <% sanBongs.forEach(sanBong=> { %>
             <option value="<%= sanBong._id %>">
                 <%= sanBong.tenSan %>
@@ -139,6 +139,9 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         const calendarEl = document.getElementById('calendar');
+        const id_SanBong = getSelectedSanBong();
+
+
         calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             headerToolbar: {
@@ -151,7 +154,7 @@
             dateClick: handleDateClick,
             events: async function (fetchInfo, successCallback, failureCallback) {
                 try {
-                    const response = await fetch("/datLich/lich");
+                    const response = await fetch("/khachHang/datLich/lich");
                     const data = await response.json();
                     successCallback(data);
                 } catch (error) {
@@ -164,6 +167,16 @@
         initializeDatePicker("single");
     });
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const sanBongDropdown = document.getElementById("sanBongDropdown");
+
+        sanBongDropdown.addEventListener('change', function () {
+            const id_SanBong = getSelectedSanBong();
+            console.log("Selected SanBong ID updated to:", id_SanBong);
+        });
+    });
+
+
     function initializeDatePicker(mode) {
         datePicker = flatpickr("#datePicker", {
             locale: 'vn',
@@ -172,21 +185,15 @@
             minDate: new Date().fp_incr(1),
             onChange: function (selectedDatesArray) {
                 selectedDates = selectedDatesArray;
-                console.log(selectedDates, "JSJSJAJASLALASKASKLAKLSAKLS");
             },
-            eventClick: displayEventDetails,
         });
     }
 
-    function displayEventDetails(info) {
-        const event = info.event;
-        const eventDetailsRow = document.querySelector('#event-details');
-        eventDetailsRow.innerHTML = `
-        <tr>
-            <td>${event.title} - ${event.start.toLocaleTimeString()} - ${event.end.toLocaleTimeString()} - ${event.start.toLocaleDateString()}</td>
-            <td><button class="action-btn" onclick="deleteEvent('${event.id}')">Xóa</button></td>
-        </tr>
-    `;
+    function getSelectedSanBong() {
+        const sanBongDropdown = document.getElementById("sanBongDropdown");
+        const selectedSanBongId = sanBongDropdown.value;
+        console.log(selectedSanBongId);
+        return selectedSanBongId;
     }
 
     function updateDatePickerMode() {
@@ -196,7 +203,18 @@
         initializeDatePicker(newMode);
     }
 
+    function selectCa(id, tenCa, gioBatDau, gioKetThuc, tongTien, event) {
+        selectedCa = { _id: id, tenCa, gioBatDau, gioKetThuc, tongTien };
+        const startDate = new Date(gioBatDau);
+        const endDate = new Date(gioKetThuc);
+        datePicker.setDate([startDate, endDate]);
+
+        document.querySelectorAll('.caLamViec-item').forEach(el => el.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
+    }
+
     function handleDateClick(info) {
+
         const selectedDate = new Date(info.dateStr);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -206,7 +224,6 @@
             alert('Ngày đã qua hoặc là ngày hiện tại, bạn không thể chọn.');
             return;
         }
-
         if (datePicker.config.mode === "range") {
             selectedDates = [selectedDate];
             datePicker.setDate(selectedDates, true);
@@ -229,70 +246,103 @@
             }
         }
 
+
+
         const existingEvents = calendar.getEvents().filter(event => event.startStr.startsWith(info.dateStr));
         if (existingEvents.length > 0) {
-            alert('Đã có sự kiện cho ngày này!');
+            const event = existingEvents[0];
+            console.log(event);
+            const gioBatDau = event.extendedProps.gioBatDau;
+            const gioKetThuc = event.extendedProps.gioKetThuc;
+            const id = event.extendedProps._id;
+            const eventDate = new Date(info.dateStr).toLocaleDateString('vi-VN');
+            const eventDetailsRow = document.querySelector('#event-details');
+            eventDetailsRow.innerHTML = `
+        <tr>
+            <td id="event-info">${event.title} <br>
+                Ngày: ${eventDate} <br>
+                Giờ bắt đầu: ${gioKetThuc} <br>
+                Giờ kết thúc: ${gioBatDau}
+            </td>
+            <td> 
+                <form action="khachHang/datLich/xoaLich/${id}?_method=DELETE" method="post">
+                    <button type="submit" class="cancel">Xóa</button>
+                </form>
+            </td>
+        </tr>
+    `;
             return;
+        } else {
+            document.getElementById("datePicker").value = info.dateStr;
+            openForm();
         }
+
         document.getElementById("datePicker").value = info.dateStr;
         openForm();
     }
 
-
-
-    function selectCa(id, tenCa, gioBatDau, gioKetThuc, tongTien, event) {
-        selectedCa = { _id: id, tenCa, gioBatDau, gioKetThuc, tongTien };
-
-        const startDate = new Date(gioBatDau);
-        const endDate = new Date(gioKetThuc);
-
-        datePicker.setDate([startDate, endDate]);
-
-        document.querySelectorAll('.caLamViec-item').forEach(el => el.classList.remove('selected'));
-        event.currentTarget.classList.add('selected');
-    }
-
     function saveEvent() {
-    if (!selectedCa) {
-        alert("Vui lòng chọn một ca làm việc trước.");
-        return;
-    }
-    if (!selectedDates || selectedDates.length === 0) {
-        alert("Vui lòng chọn ngày hợp lệ.");
-        return;
-    }
+        if (!selectedCa) {
+            alert("Vui lòng chọn một ca làm việc trước.");
+            return;
+        }
+        if (!selectedDates || selectedDates.length === 0) {
+            alert("Vui lòng chọn ngày hợp lệ.");
+            return;
+        }
 
-    // Loop through each selected date to create separate events
-    selectedDates.forEach(date => {
-        const dateISO = date.toISOString().split('T')[0];
+        const startDate = selectedDates[0];
+        const endDate = selectedDates[selectedDates.length - 1];
 
-        // Set start and end datetime for each selected day
-        const startEventDate = new Date(`${dateISO}T${selectedCa.gioBatDau}:00`);
-        const endEventDate = new Date(`${dateISO}T${selectedCa.gioKetThuc}:00`);
+        function getDatesInRange(start, end) {
+            const dateArray = [];
+            let currentDate = new Date(start);
+            while (currentDate <= end) {
+                dateArray.push(new Date(currentDate));
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            return dateArray;
+        }
 
-        // Adjust for timezone offset
-        startEventDate.setMinutes(startEventDate.getMinutes() - startEventDate.getTimezoneOffset() + 7 * 60);
-        endEventDate.setMinutes(endEventDate.getMinutes() - endEventDate.getTimezoneOffset() + 7 * 60);
+        const dateRange = getDatesInRange(startDate, endDate);
 
-        console.log("Tên Ca: " + selectedCa.tenCa,
-            "Start Event Date: " + startEventDate,
-            "End Event Date: " + endEventDate,
-            `${selectedCa.tongTien} VND`
-        );
-        calendar.addEvent({
-            title: selectedCa.tenCa,
-            start: startEventDate,
-            end: endEventDate,
-            description: `${selectedCa.tongTien} VND`,
-            allDay: false
+        dateRange.forEach(date => {
+            const dateISO = date.toISOString().split('T')[0];
+
+            const startEventDate = new Date(`${startDate}`);
+            const endEventDate = new Date(`${endDate}`);
+
+            const bookingData = {
+                id_SanBong: getSelectedSanBong(),
+                id_CaLamViec: selectedCa._id,
+                ngayDatLich: new Date().toISOString(),
+                ngayBatDau: startEventDate.toISOString(),
+                ngayKetThuc: endEventDate.toISOString(),
+            };
+
+            fetch('/datLich/dat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bookingData),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert("Lỗi khi đặt lịch cho ngày " + dateISO + ": " + data.error);
+                    } else {
+                        console.log("Đặt lịch thành công cho ngày:", dateISO);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Có lỗi xảy ra khi gửi dữ liệu cho ngày " + dateISO);
+                });
         });
-    });
-
-    closeForm();
-    selectedDates = null;
-}
-
-
+        closeForm();
+        selectedDates = null;
+    }
 
     function deselectCaLamViec() {
         selectedCa = null;

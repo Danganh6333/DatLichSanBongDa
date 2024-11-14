@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { authenticate, authorize } = require("../middleware/authMiddleware");
-const { CaLamViecModel } = require("../model/caLamViec_model");
-const { SanBongModel } = require("../model/sanBong_model");
-const { DatLichModel } = require("../model/datLich_model");
+const {addTransactions} = require("../controller/thanhToan_controller")
 const {
   addBooking,
   getBookingsData,
@@ -11,6 +9,10 @@ const {
   deleteBooking,
   getListBookings,
 } = require("../controller/datLich_controller");
+
+const {
+  findShiftsById
+} = require("../controller/caLamViec_controller")
 
 const {logOut} = require("../controller/nguoiDung_controller")
 
@@ -38,10 +40,12 @@ router.get(
   getListBookings
 );
 
-router.get("/datLich/lich", authenticate, authorize("user"), getBookingsData)
-router.post("/datLich/dat", authenticate, authorize("user"),addBooking);
-router.put('/datLich/suaLich', authenticate, authorize("user"),updateBookingStatus);
-router.delete('/datLich/xoaLich', authenticate, authorize("user"),deleteBooking);
+router.get("/caLamViec/timCaLamViec/:id",authenticate, authorize("user"),findShiftsById)
 
+router.get("/khachHang/datLich/lich", authenticate, authorize("user"), getBookingsData)
+router.post("/khachHang/datLich/dat", authenticate, authorize("user"),addBooking);
+router.delete('/khachHang/datLich/xoaLich/:id', authenticate, authorize("user"),deleteBooking);
+
+router.post("/thanhToan",addTransactions)
 router.get("/dangXuat",logOut)
 module.exports = router;

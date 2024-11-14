@@ -5,6 +5,7 @@ const chuSanLayout = "../views/layouts/chuSan";
 
 exports.getListFields = async (req, res, next) => {
   try {
+    await mongoose.connect(process.env.MONGO_URI);
     const locals = {
       title: "Trang Chủ",
       description:

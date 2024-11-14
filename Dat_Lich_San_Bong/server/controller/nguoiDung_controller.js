@@ -9,7 +9,20 @@ const chuSanLayout = "../views/layouts/chuSan";
 exports.SignUp = async (req, res, next) => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    const { hoTen, email, phoneNumber, vaiTro, matKhau } = req.body;
+    const { hoTen, email, phoneNumber, matKhau } = req.body;
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Email không hợp lệ." });
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    if (!passwordRegex.test(matKhau)) {
+      return res.status(400).json({
+        message:
+          "Mật khẩu phải có ít nhất 6 ký tự, bao gồm ít nhất một chữ hoa, một chữ thường và một chữ số.",
+      });
+    }
 
     const existingUser = await NguoiDungModel.findOne({ email });
     if (existingUser)
@@ -20,15 +33,20 @@ exports.SignUp = async (req, res, next) => {
     const newUser = new NguoiDungModel({
       hoTen,
       email,
-      phoneNumber,
-      vaiTro,
+      phoneNumber, 
       matKhau: hashedPassword,
       trangThai: "Hoạt động",
     });
 
     await newUser.save();
 
-    res.status(201).json({ message: "Đăng ký thành công" });
+    const token = jwt.sign(
+      { id: newUser._id, vaiTro: newUser.vaiTro },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.cookie("token", token, { httpOnly: true }).redirect("/khachHang");
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });
@@ -40,7 +58,7 @@ exports.SignIn = async (req, res, next) => {
     await mongoose.connect(process.env.MONGO_URI);
     const { email, matKhau } = req.body;
     const user = await NguoiDungModel.findOne({ email });
-    
+
     if (!user)
       return res
         .status(400)
@@ -78,6 +96,7 @@ exports.SignIn = async (req, res, next) => {
 
 exports.logOut = async (req, res, next) => {
   try {
+    await mongoose.connect(process.env.MONGO_URI);
     res.clearCookie("token").redirect("/")
   } catch (error) {
     console.error(error);

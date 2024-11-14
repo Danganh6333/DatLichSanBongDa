@@ -83,3 +83,17 @@ exports.deleteShift = async (req, res, next) => {
     res.status(500).json({ error: "Lỗi khi cập nhật xóa làm việc" });
   }
 };
+
+exports.findShiftsById = async (req, res, next) => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    const caLamViec = await CaLamViecModel.findById(req.params.id);
+    if (!caLamViec) {
+      return res.status(404).json({ error: 'Ca không tồn tại' });
+    }
+    res.json(caLamViec);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Lỗi khi cập nhật tìm kiếm ca' });
+  }
+}

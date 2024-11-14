@@ -111,7 +111,8 @@
         </div>
         <div class="input-box">
             <div class="image-container">
-                <input type="file" accept="image/png, image/jpeg, image/jpg" id="editFileInput" name="anhSanPham" style="display:none" />
+                <input type="file" accept="image/png, image/jpeg, image/jpg" id="editFileInput" name="anhSanPham"
+                    style="display:none" />
                 <input type="text" id="edit-file-chosen" placeholder="Chọn Ảnh Sản Phẩm" readonly />
                 <button type="button" class="imageButton" onclick="triggerFileInput(true)">
                     <i class="fa-regular fa-image"></i>
@@ -195,21 +196,19 @@
 
 
     function openEditModal(nuocUong) {
-    const formAction = `nuocUong/suaNuocUong/${nuocUong._id}?_method=PUT`;
-    document.getElementById('editForm').action = formAction;
+        const formAction = `nuocUong/suaNuocUong/${nuocUong._id}?_method=PUT`;
+        document.getElementById('editForm').action = formAction;
 
-    document.getElementById('edit-id').value = nuocUong._id;
-    document.getElementById('edit-tenSanPham').value = nuocUong.tenSanPham;
-    document.getElementById('edit-giaSanPham').value = nuocUong.giaSanPham;
-    document.getElementById('edit-hangTonKho').value = nuocUong.hangTonKho;
-    
-    document.getElementById('edit-file-chosen').value = nuocUong.anhSanPham;
-    
-    document.getElementById('edit-moTaSanPham').value = nuocUong.moTaSanPham;
-    editModal.showModal();
-}
+        document.getElementById('edit-id').value = nuocUong._id;
+        document.getElementById('edit-tenSanPham').value = nuocUong.tenSanPham;
+        document.getElementById('edit-giaSanPham').value = nuocUong.giaSanPham;
+        document.getElementById('edit-hangTonKho').value = nuocUong.hangTonKho;
 
+        document.getElementById('edit-file-chosen').value = nuocUong.anhSanPham;
 
+        document.getElementById('edit-moTaSanPham').value = nuocUong.moTaSanPham;
+        editModal.showModal();
+    }
 
     closeModalButton.addEventListener('click', () => {
         editModal.close();

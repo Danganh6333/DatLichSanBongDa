@@ -20,10 +20,12 @@ exports.getListBookings = async (req, res, next) => {
     const data = await DatLichModel.find({ id_NguoiDung: locals.userId })
       .populate("id_NguoiDung")
       .populate("id_SanBong")
+      .populate("id_CaLamViec")
       .sort({ createdAt: -1 });
 
     const caLamViecs = await CaLamViecModel.find({ trangThai: 'Hoạt Động' }).sort({ createdAt: -1 });
     const sanBongs = await SanBongModel.find({ trangThai: 'Đang Dùng' }).sort({ createdAt: -1 });
+
     res.render("khachHang/datSan", {
       locals,
       layout: khachHangLayout,
@@ -50,21 +52,22 @@ exports.getBookingsData = async (req, res, next) => {
     const data = await DatLichModel.find({ id_NguoiDung: locals.userId })
       .populate("id_NguoiDung")
       .populate("id_SanBong")
+      .populate("id_CaLamViec")
       .sort({ createdAt: -1 });
-
+    console.log(data);
+    
     const calendarEvents = data.map(booking => {
-      const giaTheoGio = booking.id_SanBong.giaTheoGio;
-      const durationHours = (new Date(booking.ngayKetThuc) - new Date(booking.ngayBatDau)) / 3600000;
-      const tongTien = giaTheoGio * durationHours;
-
       return {
         title: booking.id_SanBong.tenSan,
         start: booking.ngayBatDau,
         end: booking.ngayKetThuc,
-        description: `${tongTien.toFixed(0)} VND`,
+        description: `${booking.id_SanBong.giaTheoGio} VND`,
         allDay: true,
+        gioBatDau: booking.id_CaLamViec.gioBatDau,
+        gioKetThuc: booking.id_CaLamViec.gioKetThuc,
+        _id:booking.id
       };
-    });  
+    });
 
     res.status(200).json(calendarEvents);
   } catch (error) {
@@ -77,28 +80,25 @@ exports.addBooking = async (req, res, next) => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     const {
-      id_NguoiDung,
+      id_CaLamViec,
       id_SanBong,
       ngayDatLich,
       ngayBatDau,
       ngayKetThuc,
-      trangThai,
-      tongTien,
     } = req.body;
 
     const newDatLich = new DatLichModel({
-      id_NguoiDung,
+      id_NguoiDung: req.user.id,
+      id_CaLamViec,
       id_SanBong,
       ngayDatLich,
       ngayBatDau,
       ngayKetThuc,
-      trangThai,
-      tongTien,
     });
 
-    const savedDatLich = await newDatLich.save();
+    await newDatLich.save();
 
-    res.status(201).json(savedDatLich);
+    res.redirect('/khachHang/datLich');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi đặt lịch" });
@@ -136,7 +136,7 @@ exports.deleteBooking = async (req, res, next) => {
     }
 
     await DatLichModel.findByIdAndDelete(id_Lich);
-    res.redirect("/chuSan/nhanVien");
+    res.redirect("/khachHang/datLich");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Lỗi khi đặt lịch" });
