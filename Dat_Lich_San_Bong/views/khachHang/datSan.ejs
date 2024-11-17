@@ -83,7 +83,7 @@
             </select>
 
             <label for="datePicker">Chọn Ngày:</label>
-            <input type="text" id="datePicker" placeholder="Chọn ngày" />
+            <input type="text" id="datePicker" placeholder="Chọn ngày" readonly />
         </div>
 
         <div class="button-group">
@@ -92,7 +92,7 @@
     </form>
 </div>
 <div class="form-popup" id="addAppointment">
-    <form action="" class="form-container">
+    <form action="" class="form-container" id="bookingForm">
         <h2 class="form-title">Đặt Sân</h2>
         <table>
             <tr>
@@ -103,7 +103,7 @@
             </tr>
             <tr>
                 <td>
-                    <select class="header-dropdown">
+                    <select id="sanBongDropdown" class="header-dropdown">
                         <% sanBongs.forEach(sanBong=> { %>
                             <option value="<%= sanBong._id %>">
                                 <%= sanBong.tenSan %>
@@ -112,22 +112,19 @@
                     </select>
                 </td>
                 <td>
-                    <input type="date" value="2017-06-01" />
+                    <input type="date" id="dateInput" value="2017-06-01" />
                 </td>
                 <td>
-                    <input type="number" name="" id="" placeholder="Nhập giá">
+                    <input type="number" id="priceInput" placeholder="Nhập giá">
                 </td>
                 <td class="button-group">
-                    <button>Thêm Ca</button>
+                    <button type="button" onclick="addShift()">Thêm Ca</button>
                 </td>
             </tr>
         </table>
-        <div>
-
-        </div>
         <div class="button-group">
             <button type="button" class="btn cancel" onclick="closeAppointment()">Đóng</button>
-            <button type="button" class="btn save" onclick="">Đặt lịch và thanh toán</button>
+            <button type="button" class="btn save" onclick="submitBooking()">Đặt lịch và thanh toán</button>
         </div>
     </form>
 </div>
@@ -265,7 +262,7 @@
                 Giờ kết thúc: ${gioBatDau}
             </td>
             <td> 
-                <form action="khachHang/datLich/xoaLich/${id}?_method=DELETE" method="post">
+                <form action="datLich/xoaLich/${id}?_method=DELETE" method="post">
                     <button type="submit" class="cancel">Xóa</button>
                 </form>
             </td>
@@ -320,7 +317,7 @@
                 ngayKetThuc: endEventDate.toISOString(),
             };
 
-            fetch('/datLich/dat', {
+            fetch('/khachHang/datLich/dat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -343,6 +340,41 @@
         closeForm();
         selectedDates = null;
     }
+    function submitBooking() {
+        const sanBongId = document.getElementById("sanBongDropdown").value;
+        const selectedDate = document.getElementById("dateInput").value;
+        const price = document.getElementById("priceInput").value;
+
+        const bookingData = {
+            sanBongId: sanBongId,
+            date: selectedDate,
+            price: price
+        };
+        console.log("Booking Data:", bookingData);
+
+        fetch("/api/bookField", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(bookingData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Booking response:", data);
+                if (data.success) {
+                    alert("Đặt lịch thành công!");
+                    closeAppointment();
+                } else {
+                    alert("Đặt lịch thất bại. Vui lòng thử lại.");
+                }
+            })
+            .catch(error => {
+                console.error("Error booking field:", error);
+                alert("Có lỗi xảy ra. Vui lòng thử lại.");
+            });
+    }
+
 
     function deselectCaLamViec() {
         selectedCa = null;
